@@ -65,6 +65,7 @@ export default class CustomerController extends AbstractController {
 			res.status(500).json(this.response);
 		}
 	}
+
 	public async delete(req: Request, res: Response): Promise<void> {
 		try {
 			const customerId: number = parseInt(req.params.id, 10);

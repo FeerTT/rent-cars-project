@@ -20,9 +20,6 @@ export default class CarsController extends AbstractController {
 
 	public async configureRoutes(app: Application): Promise<void> {
 		const ROUTE: string = this.ROUTE_BASE;
-		app.get(`${ROUTE}/create`, (req, res) => {
-			res.render('cars/view/create');
-		});
 		app.post(`${ROUTE}/create`, this.create.bind(this));
 		app.get(`${ROUTE}`, this.index.bind(this));
 		app.get(`${ROUTE}/view/:id`, this.view.bind(this));
@@ -32,25 +29,17 @@ export default class CarsController extends AbstractController {
 
 	public async index(req: Request, res: Response): Promise<void> {
 		try {
-			const carsData = await this.carsService.getAll();
-			res.render('cars/view/index', { carsData });
+			this.response.data = await this.carsService.getAll();
+			if (this.response.data) {
+				this.response.status = true;
+				res.status(200).json(this.response);
+			}
 		} catch (error) {
 			this.response.status = false;
-			this.response.errors = 'Error al obtener todos los autos';
+			this.response.errors = 'Error getting all the cars';
 			res.status(500).json(this.response);
 		}
 	}
-	// public async index(req: Request, res: Response): Promise<void> {
-	// 	try {
-	// 		this.response.data = await this.carsService.getAll();
-	// 		// res.render('cars/view/index');
-	// 		res.json(this.response);
-	// 	} catch (error) {
-	// 		this.response.status = false;
-	// 		this.response.errors = 'Error al obtener todos los autos';
-	// 		res.status(500).json(this.response);
-	// 	}
-	// }
 
 	public async create(req: Request, res: Response): Promise<void> {
 		try {
@@ -63,13 +52,11 @@ export default class CarsController extends AbstractController {
 				return;
 			}
 			const car: iCar = req.body;
-			console.log(car, 'CL DE CAR LO QUE RECIBO');
-			const newCar = await this.carsService.create(car);
-			res.status(201).json({ success: true, newCar });
+			this.response.data = await this.carsService.create(car);
+			res.status(201).json(this.response);
 		} catch (error) {
 			this.response.status = false;
-			//console.log(error, 'cl de error');
-			this.response.errors = 'Error al crear el auto';
+			this.response.errors = 'Error creating the car';
 			res.status(500).json(this.response);
 		}
 	}
@@ -77,21 +64,23 @@ export default class CarsController extends AbstractController {
 	public async view(req: Request, res: Response): Promise<iCar> {
 		try {
 			const carId: number = parseInt(req.params.id, 10);
-			const carById = await this.carsService.getById(carId);
-			if (!carById) {
+			this.response.data = await this.carsService.getById(carId);
+			if (!this.response.data) {
 				this.response.status = false;
-				this.response.errors = `No se encontró ningún auto con ID ${carId}`;
+				this.response.errors = `No car found with ID ${carId}`;
 				res.status(404).json(this.response);
+				this.response.errors = ``;
 				return;
 			}
 			res.json({
 				status: true,
-				data: carById,
+				data: this.response.data,
 			});
 		} catch (error) {
 			this.response.status = false;
-			this.response.errors = `Error al obtener el auto con id ingresado`;
+			this.response.errors = `Error getting the car with the entered ID`;
 			res.status(500).json(this.response);
+			this.response.errors = '';
 		}
 	}
 
@@ -101,16 +90,18 @@ export default class CarsController extends AbstractController {
 			if (isNaN(carId)) {
 				res.status(400).json({
 					status: false,
-					errors: 'ID de auto inválido',
+					errors: 'Invalid car ID',
 				});
+				this.response.errors = ``;
 				return;
 			}
-			const car = await this.carsService.getById(carId);
-			if (!car) {
+			this.response.data = await this.carsService.getById(carId);
+			if (this.response.data.length === 0) {
 				res.status(404).json({
 					status: false,
-					errors: `No se encontró ningún auto con ID ${carId}`,
+					errors: `No car was found with ID ${carId}`,
 				});
+				this.response.errors = ``;
 				return;
 			}
 			await Promise.all(
@@ -128,12 +119,13 @@ export default class CarsController extends AbstractController {
 			);
 			res.json({
 				status: true,
-				message: 'Auto actualizado exitosamente',
+				message: 'Car updated successfully',
 			});
 		} catch (error) {
 			this.response.status = false;
-			this.response.errors = 'Error al crear el auto';
+			this.response.errors = 'Error creating the car.';
 			res.status(500).json(this.response);
+			this.response.errors = ``;
 		}
 	}
 
@@ -143,26 +135,27 @@ export default class CarsController extends AbstractController {
 			if (isNaN(carId)) {
 				res.status(400).json({
 					status: false,
-					errors: 'ID de auto inválido',
+					errors: 'Invalid car ID.',
 				});
 				return;
 			}
-			const car = await this.carsService.getById(carId);
-			if (!car) {
+			this.response.data = await this.carsService.getById(carId);
+			if (!this.response.data) {
 				res.status(404).json({
 					status: false,
-					errors: `No se encontró ningún auto con ID ${carId}`,
+					errors: `No car was found with ID ${carId}`,
 				});
+				this.response.errors = ``;
 				return;
 			}
 			await this.carsService.delete(carId);
 			res.json({
 				status: true,
-				message: 'Auto Eliminado exitosamente',
+				message: 'Car deleted successfully',
 			});
 		} catch (error) {
 			this.response.status = false;
-			this.response.errors = 'Error al eliminar el auto';
+			this.response.errors = 'Error deleting the car.';
 			res.status(500).json(this.response);
 		}
 	}
