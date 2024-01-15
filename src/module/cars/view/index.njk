@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <script defer src="/public/js/deleteCar.js"></script>
+    <script defer src="/public/js/modifyCar.js"></script>
+</head>
+<body>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title has-text-centered">Car List</h1>
+    
+            <div class="columns is-centered">
+                <div class="column is-fullwidth">
+                    <a class="button is-primary is-fullwidth" href="/cars/create">Create new car</a>
+                    <hr>
+                    <div class="table-container is-fullwidth">
+                        <table class="table is-bordered is-fullwidth">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Brand</th>
+                                    <th>Model</th>
+                                    <th>Transmission</th>
+                                    <th>Passengers</th>
+                                    <th>Air conditioning</th>
+                                    <th>Color</th>
+                                    <th>Kms</th>
+                                    <th>Year</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for car in carsData %}
+                                    <tr>
+                                        <td class="car-id data-cell" data-car-id="{{ car.dataValues.id }}">{{ car.dataValues.id }}</td>
+                                        <td class="brand data-cell" data-brand="{{ car.dataValues.brand }}">{{ car.dataValues.brand }}</td>
+                                        <td class="model data-cell" data-model="{{ car.dataValues.model }}">{{ car.dataValues.model }}</td>
+                                        <td class="transmission data-cell">{{ car.dataValues.transmission }}</td>
+                                        <td class="passengers data-cell">{{ car.dataValues.passengers }}</td>
+                                        <td class="air-conditioning data-cell" data-air-conditioning="{{ car.dataValues.air_conditioning }}">
+                                            {% if car.dataValues.air_conditioning %}
+                                                Yes
+                                            {% else %}
+                                                No
+                                            {% endif %}
+                                        </td>
+                                        <td class="color data-cell">{{ car.dataValues.color }}</td>
+                                        <td class="kms data-cell">{{ car.dataValues.kms }}</td>
+                                        <td class="year data-cell">{{ car.dataValues.year }}</td>
+                                        <td>
+                                            <button class="button is-danger is-small" onclick="deleteCar(this)">Delete</button>
+                                            <button class="button is-warning is-small" onclick="openModifyForm(this)">Modify</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% include './modifyForm.njk' %}
+</body>
+</html>

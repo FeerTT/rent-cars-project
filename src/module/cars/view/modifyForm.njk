@@ -1,0 +1,82 @@
+<script defer src="/public/js/modifyCar.js"></script>
+
+<div id="modifyModal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Modify Car</p>
+            <button class="delete" aria-label="close" onclick="closeModifyModal()"></button>
+        </header>
+        <section class="modal-card-body">
+    
+    <div class="field">
+        <label class="label" for="brandModify">Brand:</label>
+        <div class="control">
+            <input class="input" type="text" id="brandModify" name="brandModify" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="modelModify">Model:</label>
+        <div class="control">
+            <input class="input" type="text" id="modelModify" name="modelModify" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="transmissionModify">Transmission:</label>
+        <div class="control">
+            <div class="select">
+                <select id="transmissionModify" name="transmissionModify" required>
+                    <option value="Automatic">Automática</option>
+                    <option value="Manual">Manual</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="passengersModify">Passengers:</label>
+        <div class="control">
+            <input class="input" type="number" id="passengersModify" name="passengersModify" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="airConditioningModify">Air conditioning:</label>
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" id="airConditioningModify" name="airConditioningModify">
+                Air conditioning
+            </label>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="colorModify">Color:</label>
+        <div class="control">
+            <input class="input" type="text" id="colorModify" name="colorModify" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="kmsModify">Kms:</label>
+        <div class="control">
+            <input class="input" type="number" id="kmsModify" name="kmsModify" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="yearModify">Year:</label>
+        <div class="control">
+            <input class="input" type="number" id="yearModify" name="yearModify" required>
+        </div>
+    </div>
+
+</section>
+    <footer class="modal-card-foot">
+        <button id="modifyButton" class="button is-warning">Modify</button>
+        <button class="button" onclick="closeModifyModal()">Cancel</button>
+    </footer>
+    </div>
+</div>
