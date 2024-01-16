@@ -1,4 +1,4 @@
-export default interface iCustomer {
+export default interface ICustomer {
 	id?: number;
 	firstName: string;
 	lastName: string;

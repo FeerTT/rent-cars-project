@@ -1,13 +1,13 @@
 import AbstractController from '../../abstractController';
 import { Application, Request, Response } from 'express';
+import ICustomer from '../entity/Icustomers';
 import { CustomerService } from '../customerModule';
-import iResponse from '../entity/iResponse';
-import iCustomer from '../entity/iCustomer';
+import IResponse from '../entity/IcustomerResponse';
 
 export default class CustomerController extends AbstractController {
 	public readonly ROUTE_BASE: string;
 	private customerService: CustomerService;
-	private response: iResponse = { status: true, errors: '', data: null };
+	private response: IResponse = { status: true, errors: '', data: null };
 
 	constructor(customerService: CustomerService) {
 		super();
@@ -36,7 +36,7 @@ export default class CustomerController extends AbstractController {
 			res.status(500).json(this.response);
 		}
 	}
-	public async view(req: Request, res: Response): Promise<iCustomer> {
+	public async view(req: Request, res: Response): Promise<ICustomer> {
 		try {
 			const customerId: number = parseInt(req.params.id, 10);
 			this.response.data = await this.customerService.getById(customerId);
@@ -56,7 +56,7 @@ export default class CustomerController extends AbstractController {
 
 	public async create(req: Request, res: Response): Promise<void> {
 		try {
-			const customer: iCustomer = req.body;
+			const customer: ICustomer = req.body;
 			this.response.data = await this.customerService.create(customer);
 			res.status(201).json(this.response);
 		} catch (error) {
@@ -113,7 +113,7 @@ export default class CustomerController extends AbstractController {
 				});
 				return;
 			}
-			const updatedCustomerData: iCustomer = req.body;
+			const updatedCustomerData: ICustomer = req.body;
 			this.response.data = await this.customerService.update(
 				customerId,
 				updatedCustomerData

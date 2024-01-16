@@ -1,14 +1,14 @@
 import AbstractController from '../../abstractController';
 import { Request, Response, Application } from 'express';
-import iCar from '../entity/iCar';
+import ICar from '../entity/Icars';
 import { CarService } from '../module';
-import iResponse from '../entity/iResponse';
+import IResponse from '../entity/IcarsResponse';
 import { body, validationResult } from 'express-validator';
 import { CreateCarValidation, updateCarValidations } from './error/validations';
 
 export default class CarsController extends AbstractController {
 	public readonly ROUTE_BASE: string;
-	private response: iResponse = { status: true, errors: '', data: null };
+	private response: IResponse = { status: true, errors: '', data: null };
 
 	private carsService: CarService;
 
@@ -51,7 +51,7 @@ export default class CarsController extends AbstractController {
 				res.status(400).json({ errors: errors.array() });
 				return;
 			}
-			const car: iCar = req.body;
+			const car: ICar = req.body;
 			this.response.data = await this.carsService.create(car);
 			res.status(201).json(this.response);
 		} catch (error) {
@@ -61,7 +61,7 @@ export default class CarsController extends AbstractController {
 		}
 	}
 
-	public async view(req: Request, res: Response): Promise<iCar> {
+	public async view(req: Request, res: Response): Promise<ICar> {
 		try {
 			const carId: number = parseInt(req.params.id, 10);
 			this.response.data = await this.carsService.getById(carId);
@@ -113,7 +113,7 @@ export default class CarsController extends AbstractController {
 				return;
 			}
 
-			const updatedCarData: iCar = req.body;
+			const updatedCarData: ICar = req.body;
 			await this.carsService.update(carId, updatedCarData);
 
 			res.status(200).json({

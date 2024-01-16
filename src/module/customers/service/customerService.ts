@@ -1,5 +1,5 @@
 import { CustomerRepository } from '../customerModule';
-import iCustomer from '../entity/iCustomer';
+import ICustomer from '../entity/Icustomers';
 
 export default class CustomerService {
 	public customerRepository: CustomerRepository;
@@ -7,10 +7,10 @@ export default class CustomerService {
 	constructor(customerRepository: CustomerRepository) {
 		this.customerRepository = customerRepository;
 	}
-	public async create(customer: iCustomer): Promise<iCustomer> {
+	public async create(customer: ICustomer): Promise<ICustomer> {
 		return await this.customerRepository.create(customer);
 	}
-	public async getAll(): Promise<iCustomer[]> {
+	public async getAll(): Promise<ICustomer[]> {
 		return await this.customerRepository.getAll();
 	}
 	public async getById(customerId: number): Promise<any> {
@@ -19,7 +19,7 @@ export default class CustomerService {
 	}
 	public async update(
 		customerId: number,
-		updatedCustomerData: iCustomer
+		updatedCustomerData: ICustomer
 	): Promise<void> {
 		await this.customerRepository.update(customerId, updatedCustomerData);
 	}

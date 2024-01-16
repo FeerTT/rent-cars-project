@@ -4,7 +4,7 @@
         "build": "tsc",
         "prod": "node dist/app.ts",
         "test": "jest",
-        "test:car-controller": "jest --testPathPattern=carsController.spec.ts",
+        "test:car-controller": "jest --testPathPattern=car.e2e.spec.ts",
         "test:car-repository": "jest --testPathPattern=carsRepository.spec.ts",
         "test:car-service": "jest --testPathPattern=carsService.spec.ts"
     },

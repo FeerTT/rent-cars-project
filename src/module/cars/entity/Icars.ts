@@ -1,5 +1,4 @@
-export default interface iCar {
-	//poner las interfaces del modelo carsModel
+export default interface ICar {
 	id?: number;
 	model: string;
 	transmission: string;

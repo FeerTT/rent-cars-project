@@ -1,4 +1,4 @@
-import iCar from '../entity/iCar';
+import ICar from '../entity/Icars';
 import { CarsRepository } from '../module';
 
 export default class CarService {
@@ -7,11 +7,11 @@ export default class CarService {
 	constructor(carRepository: CarsRepository) {
 		this.carRepository = carRepository;
 	}
-	public async create(car: iCar): Promise<iCar> {
+	public async create(car: ICar): Promise<ICar> {
 		return await this.carRepository.create(car);
 	}
 
-	public async getAll(): Promise<iCar[]> {
+	public async getAll(): Promise<ICar[]> {
 		return await this.carRepository.getAll();
 	}
 
@@ -19,7 +19,7 @@ export default class CarService {
 		await this.carRepository.delete(carId);
 	}
 
-	public async update(carId: number, updatedCarData: iCar): Promise<void> {
+	public async update(carId: number, updatedCarData: ICar): Promise<void> {
 		await this.carRepository.update(carId, updatedCarData);
 	}
 

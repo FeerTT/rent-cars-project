@@ -1,5 +1,5 @@
 import { CarsModel } from '../module';
-import iCar from '../entity/iCar';
+import ICar from '../entity/Icars';
 
 export default class CarsRepository {
 	private carModel: typeof CarsModel;
@@ -7,11 +7,11 @@ export default class CarsRepository {
 	constructor(carModel: typeof CarsModel) {
 		this.carModel = carModel;
 	}
-	public async create(car: any): Promise<iCar> {
+	public async create(car: any): Promise<ICar> {
 		return this.carModel.create(car);
 	}
 
-	public async getAll(): Promise<iCar[]> {
+	public async getAll(): Promise<ICar[]> {
 		return this.carModel.findAll();
 	}
 
@@ -22,7 +22,7 @@ export default class CarsRepository {
 			},
 		});
 	}
-	public async getByID(carId: number): Promise<iCar> {
+	public async getByID(carId: number): Promise<ICar> {
 		return this.carModel.findOne({
 			where: {
 				id: carId,
@@ -30,7 +30,7 @@ export default class CarsRepository {
 		});
 	}
 
-	public async update(carId: number, updatedCarData: iCar): Promise<any> {
+	public async update(carId: number, updatedCarData: ICar): Promise<any> {
 		return await this.carModel.update(updatedCarData, {
 			where: {
 				id: carId,

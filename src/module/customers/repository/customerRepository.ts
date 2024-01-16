@@ -1,5 +1,5 @@
 import { CustomerModel } from '../customerModule';
-import iCustomer from '../entity/iCustomer';
+import ICustomer from '../entity/Icustomers';
 
 export default class CustomerRepository {
 	private customerModel: typeof CustomerModel;
@@ -7,13 +7,13 @@ export default class CustomerRepository {
 	constructor(customerModel: typeof CustomerModel) {
 		this.customerModel = customerModel;
 	}
-	public async create(customer: any): Promise<iCustomer> {
+	public async create(customer: any): Promise<ICustomer> {
 		return this.customerModel.create(customer);
 	}
-	public async getAll(): Promise<iCustomer[]> {
+	public async getAll(): Promise<ICustomer[]> {
 		return this.customerModel.findAll();
 	}
-	public async getByID(customerId: number): Promise<iCustomer> {
+	public async getByID(customerId: number): Promise<ICustomer> {
 		return this.customerModel.findOne({
 			where: {
 				id: customerId,
@@ -22,7 +22,7 @@ export default class CustomerRepository {
 	}
 	public async update(
 		customerId: number,
-		updatedCustomerData: iCustomer
+		updatedCustomerData: ICustomer
 	): Promise<any> {
 		return await this.customerModel.update(updatedCustomerData, {
 			where: {
