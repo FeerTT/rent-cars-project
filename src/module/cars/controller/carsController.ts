@@ -92,18 +92,18 @@ export default class CarsController extends AbstractController {
 					status: false,
 					errors: 'Invalid car ID',
 				});
-				this.response.errors = ``;
 				return;
 			}
+
 			this.response.data = await this.carsService.getById(carId);
-			if (this.response.data.length === 0) {
+			if (!this.response.data) {
 				res.status(404).json({
 					status: false,
 					errors: `No car was found with ID ${carId}`,
 				});
-				this.response.errors = ``;
 				return;
 			}
+
 			await Promise.all(
 				updateCarValidations.map((validation) => validation.run(req))
 			);
@@ -112,23 +112,21 @@ export default class CarsController extends AbstractController {
 				res.status(400).json({ errors: updateErrors.array() });
 				return;
 			}
+
 			const updatedCarData: iCar = req.body;
-			this.response.data = await this.carsService.update(
-				carId,
-				updatedCarData
-			);
-			res.json({
+			await this.carsService.update(carId, updatedCarData);
+
+			res.status(200).json({
 				status: true,
 				message: 'Car updated successfully',
 			});
 		} catch (error) {
-			this.response.status = false;
-			this.response.errors = 'Error creating the car.';
-			res.status(500).json(this.response);
-			this.response.errors = ``;
+			res.status(500).json({
+				status: false,
+				errors: 'Error updating the car.',
+			});
 		}
 	}
-
 	public async delete(req: Request, res: Response): Promise<void> {
 		try {
 			const carId: number = parseInt(req.params.id, 10);

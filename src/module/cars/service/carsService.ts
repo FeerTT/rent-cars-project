@@ -1,4 +1,3 @@
-//importar repository
 import iCar from '../entity/iCar';
 import { CarsRepository } from '../module';
 
