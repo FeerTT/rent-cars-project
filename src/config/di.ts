@@ -6,14 +6,14 @@ import {
 	CarsController,
 	CarService,
 	CarsRepository,
-} from '../module/cars/module';
+} from '../module/cars/CarsModule';
 import {
 	CustomerModule,
 	CustomerController,
 	CustomerModel,
 	CustomerRepository,
 	CustomerService,
-} from '../module/customers/customerModule';
+} from '../module/customers/CustomerModule';
 
 export default class ConfigureDI {
 	private carsModule: CarsModule = new CarsModule();

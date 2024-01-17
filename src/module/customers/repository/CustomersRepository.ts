@@ -1,4 +1,4 @@
-import { CustomerModel } from '../customerModule';
+import { CustomerModel } from '../CustomerModule';
 import ICustomer from '../entity/Icustomers';
 
 export default class CustomerRepository {

@@ -1,21 +1,21 @@
 import request from 'supertest';
 import express from 'express';
-import { CarsController, CarService } from '../../module';
-import { carsData, carData, createdCarData } from './fixtures/testCreateCar';
+import { CarsController, CarService } from '../../CarsModule';
+import { carsData, carData, createdCarData } from './fixtures/TestCreateCars';
 import {
 	mockCarData,
 	responseUpdate,
 	updatedCarData,
-} from './fixtures/testUpdateCar';
+} from './fixtures/TestUpdateCars';
 import {
 	carIdToDelete,
 	carToDelete,
 	deleteResponse,
 	invalidCarId,
 	nonExistingCarId,
-} from './fixtures/testDeleteCar';
+} from './fixtures/TestDeleteCars';
 
-describe('CarsController', () => {
+describe('End to end test', () => {
 	let app: express.Express;
 	let mockCarService: CarService;
 	beforeEach(() => {
@@ -62,7 +62,7 @@ describe('CarsController', () => {
 	it('should create a car successfully with valid data', async () => {
 		mockCarService.create = jest.fn().mockResolvedValueOnce(createdCarData);
 		const response = await request(app)
-			.post('/cars/create')
+			.post('/cars')
 			.send(JSON.stringify(carData))
 			.set('Content-Type', 'application/json');
 		expect(response.status).toBe(201);
@@ -75,7 +75,7 @@ describe('CarsController', () => {
 	});
 
 	it('should respond with 400 if invalid car ID', async () => {
-		const response = await request(app).put('/cars/update/invalidId');
+		const response = await request(app).put('/cars/invalidId');
 		expect(response.status).toBe(400);
 		expect(response.body.status).toBe(false);
 		expect(response.body.errors).toBe('Invalid car ID');
@@ -83,7 +83,7 @@ describe('CarsController', () => {
 
 	it('should respond with 404 if car ID not found', async () => {
 		mockCarService.getById = jest.fn().mockResolvedValueOnce(null);
-		const response = await request(app).put('/cars/update/1');
+		const response = await request(app).put('/cars/1');
 		expect(response.status).toBe(404);
 		expect(response.body.status).toBe(false);
 		expect(response.body.errors).toBe('No car was found with ID 1');
@@ -92,9 +92,7 @@ describe('CarsController', () => {
 	it('should update car data successfully', async () => {
 		mockCarService.getById = jest.fn().mockResolvedValueOnce(mockCarData);
 		mockCarService.update = jest.fn().mockResolvedValueOnce(responseUpdate);
-		const response = await request(app)
-			.put('/cars/update/1')
-			.send(updatedCarData);
+		const response = await request(app).put('/cars/1').send(updatedCarData);
 		expect(response.status).toBe(200);
 		expect(response.body.status).toBe(true);
 		expect(response.body.message).toBe('Car updated successfully');
@@ -104,9 +102,7 @@ describe('CarsController', () => {
 	it('should delete a car successfully', async () => {
 		mockCarService.getById = jest.fn().mockResolvedValueOnce(carToDelete);
 		mockCarService.delete = jest.fn().mockResolvedValueOnce(deleteResponse);
-		const response = await request(app).delete(
-			`/cars/delete/${carIdToDelete}`
-		);
+		const response = await request(app).delete(`/cars/${carIdToDelete}`);
 		expect(response.status).toBe(200);
 		expect(response.body).toEqual(deleteResponse);
 		expect(mockCarService.getById).toHaveBeenCalledWith(carIdToDelete);
@@ -114,9 +110,7 @@ describe('CarsController', () => {
 	});
 
 	it('should respond with 400 for invalid car ID during delete', async () => {
-		const response = await request(app).delete(
-			`/cars/delete/${invalidCarId}`
-		);
+		const response = await request(app).delete(`/cars/${invalidCarId}`);
 		expect(response.status).toBe(400);
 		expect(response.body).toEqual({
 			status: false,
@@ -127,9 +121,7 @@ describe('CarsController', () => {
 
 	it('should respond with 404 if car ID is not found during delete', async () => {
 		mockCarService.getById = jest.fn().mockResolvedValueOnce(null);
-		const response = await request(app).delete(
-			`/cars/delete/${nonExistingCarId}`
-		);
+		const response = await request(app).delete(`/cars/${nonExistingCarId}`);
 		expect(response.status).toBe(404);
 		expect(response.body).toEqual({
 			status: false,

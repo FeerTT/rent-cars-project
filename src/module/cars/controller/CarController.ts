@@ -1,10 +1,13 @@
-import AbstractController from '../../abstractController';
+import AbstractController from '../../AbstractsController';
 import { Request, Response, Application } from 'express';
 import ICar from '../entity/Icars';
-import { CarService } from '../module';
+import { CarService } from '../CarsModule';
 import IResponse from '../entity/IcarsResponse';
 import { body, validationResult } from 'express-validator';
-import { CreateCarValidation, updateCarValidations } from './error/validations';
+import {
+	CreateCarValidation,
+	updateCarValidations,
+} from './validation/validations';
 
 export default class CarsController extends AbstractController {
 	public readonly ROUTE_BASE: string;
@@ -20,11 +23,11 @@ export default class CarsController extends AbstractController {
 
 	public async configureRoutes(app: Application): Promise<void> {
 		const ROUTE: string = this.ROUTE_BASE;
-		app.post(`${ROUTE}/create`, this.create.bind(this));
+		app.post(`${ROUTE}`, this.create.bind(this));
 		app.get(`${ROUTE}`, this.index.bind(this));
-		app.get(`${ROUTE}/view/:id`, this.view.bind(this));
-		app.put(`${ROUTE}/update/:id`, this.update.bind(this));
-		app.delete(`${ROUTE}/delete/:id`, this.delete.bind(this));
+		app.get(`${ROUTE}/:id`, this.getById.bind(this));
+		app.put(`${ROUTE}/:id`, this.update.bind(this));
+		app.delete(`${ROUTE}/:id`, this.delete.bind(this));
 	}
 
 	public async index(req: Request, res: Response): Promise<void> {
@@ -61,7 +64,7 @@ export default class CarsController extends AbstractController {
 		}
 	}
 
-	public async view(req: Request, res: Response): Promise<ICar> {
+	public async getById(req: Request, res: Response): Promise<ICar> {
 		try {
 			const carId: number = parseInt(req.params.id, 10);
 			this.response.data = await this.carsService.getById(carId);

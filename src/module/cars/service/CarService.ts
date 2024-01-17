@@ -1,7 +1,7 @@
 import ICar from '../entity/Icars';
-import { CarsRepository } from '../module';
+import { CarsRepository } from '../CarsModule';
 
-export default class CarService {
+export default class CarsService {
 	public carRepository: CarsRepository;
 
 	constructor(carRepository: CarsRepository) {

@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 import ConfigureDI from './config/di';
-import { CarsModule } from './module/cars/module';
+import { CarsModule } from './module/cars/CarsModule';
 
-import { CustomerModule } from './module/customers/customerModule';
+import { CustomerModule } from './module/customers/CustomerModule';
 
 async function init(): Promise<void> {
 	try {

@@ -1,23 +1,22 @@
-import { CarService, CarsController } from '../../module';
+import { CarService, CarsController } from '../../CarsModule';
 import { Request, Response } from 'express';
-import { createCarFixture } from './fixtures/testCreateCar';
-import { viewCarFixture } from './fixtures/testViewCar';
-import { updateCarFixture, mockCarData, carID } from './fixtures/testUpdateCar';
+import { createCarFixture } from './fixtures/TestCreateCars';
+import { viewCarFixture } from './fixtures/TestViewCars';
+import {
+	updateCarFixture,
+	mockCarData,
+	carID,
+} from './fixtures/TestUpdateCars';
 
 describe('CarsController', () => {
-	let carsController: CarsController;
-	let mockCarService: CarService;
-	beforeEach(() => {
-		mockCarService = {
-			create: jest.fn(),
-			getAll: jest.fn(),
-			delete: jest.fn(),
-			update: jest.fn(),
-			getById: jest.fn(),
-		} as unknown as CarService;
-
-		carsController = new CarsController(mockCarService);
-	});
+	const mockCarService = {
+		create: jest.fn(),
+		getAll: jest.fn(),
+		delete: jest.fn(),
+		update: jest.fn(),
+		getById: jest.fn(),
+	} as unknown as CarService;
+	const carsController = new CarsController(mockCarService);
 
 	it('should call carsService.getAll once', async () => {
 		const req = {} as Request;
@@ -48,7 +47,7 @@ describe('CarsController', () => {
 			status: jest.fn().mockReturnThis(),
 			json: jest.fn(),
 		} as unknown as Response;
-		await carsController.view(req, res);
+		await carsController.getById(req, res);
 		expect(mockCarService.getById).toHaveBeenCalledTimes(1);
 	});
 
