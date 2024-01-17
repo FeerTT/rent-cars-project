@@ -32,5 +32,3 @@ export default class CarsModel extends Model {
 	@Column({ type: DataType.STRING, allowNull: false })
 	transmission: string;
 }
-
-// CarsModel.sync();
