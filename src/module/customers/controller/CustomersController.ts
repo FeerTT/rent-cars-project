@@ -1,8 +1,8 @@
 import AbstractController from '../../AbstractsController';
 import { Application, Request, Response } from 'express';
-import ICustomer from '../entity/Icustomers';
+import ICustomer from '../entity/ICustomers';
 import { CustomerService } from '../CustomerModule';
-import IResponse from '../entity/IcustomerResponse';
+import IResponse from '../entity/ICustomerResponse';
 import { createCustomerValidations } from './validation/CustomerValidation';
 import { validationResult } from 'express-validator';
 

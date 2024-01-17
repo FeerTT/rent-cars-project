@@ -1,4 +1,4 @@
-import ICar from '../entity/Icars';
+import ICar from '../entity/ICar';
 import { CarsRepository } from '../CarsModule';
 
 export default class CarsService {

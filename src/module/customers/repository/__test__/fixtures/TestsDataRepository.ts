@@ -1,4 +1,4 @@
-import ICustomer from '../../../entity/Icustomers';
+import ICustomer from '../../../entity/ICustomers';
 
 export const customerToCreate: ICustomer = {
 	firstName: 'Jane',

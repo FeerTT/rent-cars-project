@@ -1,8 +1,8 @@
 import AbstractController from '../../AbstractsController';
 import { Request, Response, Application } from 'express';
-import ICar from '../entity/Icars';
+import ICar from '../entity/ICar';
 import { CarService } from '../CarsModule';
-import IResponse from '../entity/IcarsResponse';
+import IResponse from '../entity/ICarResponse';
 import { body, validationResult } from 'express-validator';
 import {
 	CreateCarValidation,

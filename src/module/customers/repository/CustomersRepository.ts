@@ -1,5 +1,5 @@
 import { CustomerModel } from '../CustomerModule';
-import ICustomer from '../entity/Icustomers';
+import ICustomer from '../entity/ICustomers';
 
 export default class CustomerRepository {
 	private customerModel: typeof CustomerModel;

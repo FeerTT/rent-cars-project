@@ -1,5 +1,5 @@
 import { CarsModel } from '../CarsModule';
-import ICar from '../entity/Icars';
+import ICar from '../entity/ICar';
 
 export default class CarsRepository {
 	private carModel: typeof CarsModel;
