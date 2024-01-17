@@ -1,8 +1,10 @@
-import AbstractController from '../../abstractController';
+import AbstractController from '../../AbstractsController';
 import { Application, Request, Response } from 'express';
-import ICustomer from '../entity/Icustomers';
-import { CustomerService } from '../customerModule';
-import IResponse from '../entity/IcustomerResponse';
+import ICustomer from '../entity/ICustomers';
+import { CustomerService } from '../CustomerModule';
+import IResponse from '../entity/ICustomerResponse';
+import { createCustomerValidations } from './validation/CustomerValidation';
+import { validationResult } from 'express-validator';
 
 export default class CustomerController extends AbstractController {
 	public readonly ROUTE_BASE: string;
@@ -16,11 +18,11 @@ export default class CustomerController extends AbstractController {
 	}
 	public async configureRoutes(app: Application): Promise<void> {
 		const ROUTE: string = this.ROUTE_BASE;
-		app.post(`${ROUTE}/create`, this.create.bind(this));
+		app.post(`${ROUTE}`, this.create.bind(this));
 		app.get(`${ROUTE}`, this.index.bind(this));
-		app.get(`${ROUTE}/view/:id`, this.view.bind(this));
-		app.put(`${ROUTE}/update/:id`, this.update.bind(this));
-		app.delete(`${ROUTE}/delete/:id`, this.delete.bind(this));
+		app.get(`${ROUTE}/:id`, this.getById.bind(this));
+		app.put(`${ROUTE}/:id`, this.update.bind(this));
+		app.delete(`${ROUTE}/:id`, this.delete.bind(this));
 	}
 
 	public async index(req: Request, res: Response): Promise<void> {
@@ -36,7 +38,7 @@ export default class CustomerController extends AbstractController {
 			res.status(500).json(this.response);
 		}
 	}
-	public async view(req: Request, res: Response): Promise<ICustomer> {
+	public async getById(req: Request, res: Response): Promise<ICustomer> {
 		try {
 			const customerId: number = parseInt(req.params.id, 10);
 			this.response.data = await this.customerService.getById(customerId);
@@ -44,6 +46,7 @@ export default class CustomerController extends AbstractController {
 				this.response.status = false;
 				this.response.errors = `No customer found with the entered ID. ${customerId}`;
 				res.status(404).json(this.response);
+				this.response.errors = ``;
 				return;
 			}
 			res.status(200).json(this.response);
@@ -51,11 +54,22 @@ export default class CustomerController extends AbstractController {
 			this.response.status = false;
 			this.response.errors = `Error fetching the customers with the entered ID.`;
 			res.status(500).json(this.response);
+			this.response.errors = ``;
 		}
 	}
 
 	public async create(req: Request, res: Response): Promise<void> {
 		try {
+			await Promise.all(
+				createCustomerValidations.map((validation) =>
+					validation.run(req)
+				)
+			);
+			const errors = validationResult(req);
+			if (!errors.isEmpty()) {
+				res.status(400).json({ errors: errors.array() });
+				return;
+			}
 			const customer: ICustomer = req.body;
 			this.response.data = await this.customerService.create(customer);
 			res.status(201).json(this.response);
@@ -82,6 +96,7 @@ export default class CustomerController extends AbstractController {
 					status: false,
 					errors: `Error fetching the customers with the entered ID ${customerId}`,
 				});
+				this.response.errors = ``;
 				return;
 			}
 			await this.customerService.delete(customerId);

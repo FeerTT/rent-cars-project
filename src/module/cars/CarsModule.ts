@@ -1,8 +1,8 @@
-import CarsModel from './model/carsModel';
-import CarsController from './controller/carsController';
+import CarsModel from './model/CarModel';
+import CarsController from './controller/CarController';
 import { Application } from 'express';
-import CarService from './service/carsService';
-import CarsRepository from './repository/carsRepository';
+import CarService from './service/CarService';
+import CarsRepository from './repository/CarRepository';
 
 class CarsModule {
 	constructor() {}

@@ -1,4 +1,4 @@
-import ICar from '../../../entity/Icars';
+import ICar from '../../../entity/ICar';
 
 export const carData: ICar = {
 	model: 'TestModel',
