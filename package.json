@@ -6,7 +6,10 @@
         "test": "jest",
         "test:car-controller": "jest --testPathPattern=car.e2e.spec.ts",
         "test:car-repository": "jest --testPathPattern=carsRepository.spec.ts",
-        "test:car-service": "jest --testPathPattern=carsService.spec.ts"
+        "test:car-service": "jest --testPathPattern=carsService.spec.ts",
+        "test:customer-controller": "jest --testPathPattern=customerController.spec.ts",
+        "test:customer-service": "jest --testPathPattern=customerService.spec.ts",
+        "test:customer-repository": "jest --testPathPattern=customerRepository.spec.ts"
     },
     "dependencies": {
         "@types/express": "^4.17.21",
