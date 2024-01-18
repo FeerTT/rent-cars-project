@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 import ConfigureDI from './config/di';
 import { CarsModule } from './module/cars/CarsModule';
-
+import { RentModule } from './module/rents/RentModule';
 import { CustomerModule } from './module/customers/CustomerModule';
 
 async function init(): Promise<void> {
@@ -22,6 +22,9 @@ async function init(): Promise<void> {
 
 		const customerModule: CustomerModule = new CustomerModule();
 		await customerModule.init(app, config.container);
+
+		const rentModule: RentModule = new RentModule();
+		await rentModule.init(app, config.container);
 
 		app.get('/', (req: Request, res: Response) => {
 			res.send('Cars Rent Project');

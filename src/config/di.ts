@@ -14,9 +14,17 @@ import {
 	CustomerRepository,
 	CustomerService,
 } from '../module/customers/CustomerModule';
+import {
+	RentModule,
+	RentController,
+	RentModel,
+	RentRepository,
+	RentService,
+} from '../module/rents/RentModule';
 
 export default class ConfigureDI {
-	private carsModule: CarsModule = new CarsModule();
+	private carsModule = new CarsModule();
+	private CustomerModule = new CustomerModule();
 	//public container: DIcontainer
 	public container: any;
 
@@ -51,13 +59,26 @@ export default class ConfigureDI {
 			.add(
 				'customerController',
 				({ customerService }) => new CustomerController(customerService)
+			)
+			.add('rentsModel', () => RentModel)
+			.add(
+				'rentsRepository',
+				({ rentsModel }) => new RentRepository(rentsModel)
+			)
+			.add(
+				'rentsService',
+				({ rentsRepository }) => new RentService(rentsRepository)
+			)
+			.add(
+				'rentsController',
+				({ rentsService }) => new RentController(rentsService)
 			);
 	};
 	private configureMainSequelizeDatabase = async (): Promise<Sequelize> => {
 		const sequelize = new Sequelize({
 			dialect: 'sqlite',
 			storage: process.env.DB_PATH || '',
-			models: [CarsModel, CustomerModel],
+			models: [CarsModel, CustomerModel, RentModel],
 		});
 		return sequelize;
 	};
@@ -65,5 +86,6 @@ export default class ConfigureDI {
 	private configureModels = async (): Promise<void> => {
 		CarsModel.sync();
 		CustomerModel.sync();
+		RentModel.sync();
 	};
 }
