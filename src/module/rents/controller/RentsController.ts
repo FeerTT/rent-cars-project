@@ -157,29 +157,3 @@ export default class RentController extends AbstractController {
 		}
 	}
 }
-// import AbstractController from '../../AbstractsController';
-// import { Application, Request, Response } from 'express';
-// import ICustomer from '../entity/ICustomers';
-// import { CustomerService } from '../CustomerModule';
-// import IResponse from '../entity/ICustomerResponse';
-// import { createCustomerValidations } from './validation/CustomerValidation';
-// import { validationResult } from 'express-validator';
-
-// export default class CustomerController extends AbstractController {
-// 	public readonly ROUTE_BASE: string;
-// 	private customerService: CustomerService;
-// 	private response: IResponse = { status: true, errors: '', data: null };
-
-// 	constructor(customerService: CustomerService) {
-// 		super();
-// 		this.ROUTE_BASE = '/customers';
-// 		this.customerService = customerService;
-// 	}
-// 	public async configureRoutes(app: Application): Promise<void> {
-// 		const ROUTE: string = this.ROUTE_BASE;
-// 		app.post(`${ROUTE}`, this.create.bind(this));
-// 		app.get(`${ROUTE}`, this.index.bind(this));
-// 		app.get(`${ROUTE}/:id`, this.getById.bind(this));
-// 		app.put(`${ROUTE}/:id`, this.update.bind(this));
-// 		app.delete(`${ROUTE}/:id`, this.delete.bind(this));
-// 	}
