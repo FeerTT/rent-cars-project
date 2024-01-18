@@ -3,7 +3,10 @@ import { Application, Request, Response } from 'express';
 import ICustomer from '../entity/ICustomers';
 import { CustomerService } from '../CustomerModule';
 import IResponse from '../entity/ICustomerResponse';
-import { createCustomerValidations } from './validation/CustomerValidation';
+import {
+	createCustomerValidations,
+	updateCustomerValidations,
+} from './validation/CustomerValidation';
 import { validationResult } from 'express-validator';
 
 export default class CustomerController extends AbstractController {
@@ -126,6 +129,16 @@ export default class CustomerController extends AbstractController {
 					status: false,
 					errors: `Error fetching the customers with the entered ID ${customerId}`,
 				});
+				return;
+			}
+			await Promise.all(
+				updateCustomerValidations.map((validation) =>
+					validation.run(req)
+				)
+			);
+			const errors = validationResult(req);
+			if (!errors.isEmpty()) {
+				res.status(400).json({ errors: errors.array() });
 				return;
 			}
 			const updatedCustomerData: ICustomer = req.body;

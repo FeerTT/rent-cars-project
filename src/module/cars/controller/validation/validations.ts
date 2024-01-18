@@ -5,75 +5,81 @@ export const CreateCarValidation = [
 		.notEmpty()
 		.isString()
 		.isAlpha()
-		.withMessage('La marca del auto es obligatoria'),
+		.withMessage('The car brand is required'),
 	body('model')
 		.notEmpty()
 		.isString()
-		.withMessage('El modelo del auto es obligatorio'),
-	body('year').isInt().withMessage('El año debe ser un número entero válido'),
+		.withMessage('The car model is required'),
+	body('year')
+		.notEmpty()
+		.isInt({ min: 1000, max: 9999 })
+		.withMessage('The year must be a valid integer'),
 	body('kms')
+		.notEmpty()
 		.isInt()
-		.withMessage('Los kilómetros deben ser un número entero válido'),
+		.withMessage('The kilometers must be a valid integer'),
 	body('color')
 		.notEmpty()
 		.isString()
 		.isAlpha()
-		.withMessage('El color del auto es obligatorio'),
+		.withMessage('The car color is required'),
 	body('air_conditioning')
 		.isBoolean()
-		.withMessage('El campo air_conditioning debe ser un booleano'),
+		.notEmpty()
+		.withMessage('The air conditioning field must be a boolean'),
 	body('passengers')
 		.isInt()
-		.withMessage('El número de pasajeros debe ser un número entero válido'),
+		.notEmpty()
+		.withMessage('The number of passengers must be a valid integer'),
 	body('transmission')
+		.notEmpty()
 		.isIn(['Manual', 'Automatic'])
-		.withMessage('La transmisión debe ser Manual o Automatic'),
+		.withMessage('The transmission must be Manual or Automatic'),
 ];
-
 export const updateCarValidations = [
 	body('brand')
 		.optional()
 		.notEmpty()
-		.withMessage('La marca del auto es obligatoria')
+		.withMessage('Car brand is required')
 		.isString()
 		.isAlpha()
-		.withMessage('La marca de autos debe ser un string válido'),
+		.withMessage('Car brand must be a valid string'),
 	body('model')
 		.optional()
 		.notEmpty()
-		.withMessage('El modelo del auto es obligatorio')
+		.withMessage('Car model is required')
 		.isString()
-		.withMessage('El modelo del auto debe ser una cadena'),
+		.withMessage('Car model must be a string'),
 	body('year')
 		.optional()
 		.isInt()
 		.notEmpty()
-		.withMessage('El año debe ser un número entero válido')
+		.withMessage('Year must be a valid integer')
 		.isInt({ min: 1000, max: 9999 })
-		.withMessage('El año debe ser un número entero válido de 4 dígitos'),
+		.withMessage('Year must be a valid 4-digit integer'),
 	body('kms')
 		.optional()
 		.isInt()
 		.notEmpty()
-		.withMessage('Los kilómetros deben ser un número entero válido'),
+		.withMessage('Kilometers must be a valid integer'),
 	body('color')
 		.optional()
 		.notEmpty()
 		.isString()
-		.withMessage('El color del auto es obligatorio'),
+		.withMessage('Car color is required'),
 	body('air_conditioning')
 		.optional()
 		.isBoolean()
 		.notEmpty()
-		.withMessage('El campo air_conditioning debe ser un booleano'),
+		.withMessage('Air conditioning field must be a boolean'),
 	body('passengers')
 		.optional()
 		.isInt()
 		.notEmpty()
-		.withMessage('El número de pasajeros debe ser un número entero válido'),
+		.withMessage('Number of passengers must be a valid integer'),
 	body('transmission')
 		.optional()
 		.notEmpty()
 		.isIn(['Manual', 'Automatic'])
-		.withMessage('La transmisión debe ser Manual o Automatic'),
+		.withMessage('Transmission must be Manual or Automatic'),
 ];

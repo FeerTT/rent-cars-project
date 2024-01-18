@@ -3,6 +3,12 @@ import { Application, Request, Response } from 'express';
 import IResponse from '../entity/IRentResponse';
 import RentService from '../service/RentsService';
 import IRent from '../entity/IRent';
+import {
+	CreateRentValidation,
+	UpdateRentValidation,
+} from './validations/RentsValidation';
+import { validationResult } from 'express-validator';
+
 export default class RentController extends AbstractController {
 	public readonly ROUTE_BASE: string;
 	private response: IResponse = { status: true, errors: '', data: null };
@@ -20,9 +26,17 @@ export default class RentController extends AbstractController {
 		app.put(`${ROUTE}/:id`, this.update.bind(this));
 		app.delete(`${ROUTE}/:id`, this.delete.bind(this));
 	}
-
 	public async create(req: Request, res: Response): Promise<void> {
 		try {
+			await Promise.all(
+				CreateRentValidation.map((validation) => validation.run(req))
+			);
+			const errors = validationResult(req);
+			if (!errors.isEmpty()) {
+				res.status(400).json({ errors: errors.array() });
+				return;
+			}
+
 			const rent: IRent = req.body;
 			this.response.data = await this.rentService.create(rent);
 			res.status(201).json(this.response);
@@ -80,7 +94,14 @@ export default class RentController extends AbstractController {
 				});
 				return;
 			}
-
+			await Promise.all(
+				UpdateRentValidation.map((validation) => validation.run(req))
+			);
+			const errors = validationResult(req);
+			if (!errors.isEmpty()) {
+				res.status(400).json({ errors: errors.array() });
+				return;
+			}
 			this.response.data = await this.rentService.getById(rentId);
 			if (!this.response.data) {
 				res.status(404).json({

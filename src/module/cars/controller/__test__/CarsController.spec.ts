@@ -73,7 +73,7 @@ describe('CarsController', () => {
 
 	it('should call carsService.getById and carsService.delete once on success', async () => {
 		const req: Request = {
-			params: { id: carID.toString() },
+			params: { id: carID },
 		} as unknown as Request;
 		const res = {
 			status: jest.fn().mockReturnThis(),
