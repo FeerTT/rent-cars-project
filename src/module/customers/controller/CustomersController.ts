@@ -2,17 +2,12 @@ import AbstractController from '../../AbstractsController';
 import { Application, Request, Response } from 'express';
 import ICustomer from '../entity/ICustomers';
 import { CustomerService } from '../CustomerModule';
-import IResponse from '../entity/ICustomerResponse';
-import {
-	createCustomerValidations,
-	updateCustomerValidations,
-} from './validation/CustomerValidation';
+import { createCustomerValidations } from './validation/CustomerValidation';
 import { validationResult } from 'express-validator';
 
 export default class CustomerController extends AbstractController {
 	public readonly ROUTE_BASE: string;
 	private customerService: CustomerService;
-	private response: IResponse = { status: true, errors: '', data: null };
 
 	constructor(customerService: CustomerService) {
 		super();
@@ -30,37 +25,37 @@ export default class CustomerController extends AbstractController {
 
 	public async index(req: Request, res: Response): Promise<void> {
 		try {
-			this.response.data = await this.customerService.getAll();
-			if (this.response.data) {
-				this.response.status = true;
-				res.status(200).json(this.response);
+			const response = await this.customerService.getAll();
+			if (response && response.length > 0) {
+				res.status(200).json(response);
 			}
 		} catch (error) {
-			this.response.status = false;
-			this.response.errors = 'Error retrieving customer information';
-			res.status(500).json(this.response);
+			console.error('Error retrieving customer information', error);
+			res.status(500).json({
+				errors: 'Error retrieving customer information',
+			});
 		}
 	}
-	public async getById(req: Request, res: Response): Promise<ICustomer> {
+	public async getById(req: Request, res: Response): Promise<void> {
 		try {
 			const customerId: number = parseInt(req.params.id, 10);
-			this.response.data = await this.customerService.getById(customerId);
-			if (!this.response.data) {
-				this.response.status = false;
-				this.response.errors = `No customer found with the entered ID. ${customerId}`;
-				res.status(404).json(this.response);
-				this.response.errors = ``;
+			const customerData = await this.customerService.getById(customerId);
+			if (!customerData) {
+				res.status(404).json({
+					errors: `No customer found with the entered ID. ${customerId}`,
+				});
 				return;
 			}
-			res.status(200).json(this.response);
+			res.status(200).json({
+				data: customerData,
+			});
 		} catch (error) {
-			this.response.status = false;
-			this.response.errors = `Error fetching the customers with the entered ID.`;
-			res.status(500).json(this.response);
-			this.response.errors = ``;
+			console.error(error);
+			res.status(500).json({
+				errors: `Error fetching the customer with the entered ID.`,
+			});
 		}
 	}
-
 	public async create(req: Request, res: Response): Promise<void> {
 		try {
 			await Promise.all(
@@ -70,16 +65,23 @@ export default class CustomerController extends AbstractController {
 			);
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
-				res.status(400).json({ errors: errors.array() });
+				res.status(400).json({
+					status: false,
+					errors: errors.array(),
+					data: null,
+				});
 				return;
 			}
 			const customer: ICustomer = req.body;
-			this.response.data = await this.customerService.create(customer);
-			res.status(201).json(this.response);
+			const createdCustomer = await this.customerService.create(customer);
+			res.status(201).json({
+				data: createdCustomer,
+			});
 		} catch (error) {
-			this.response.status = false;
-			this.response.errors = 'Error on customer creation';
-			res.status(500).json(this.response);
+			console.error(error);
+			res.status(500).json({
+				errors: 'Error on customer creation',
+			});
 		}
 	}
 
@@ -88,29 +90,26 @@ export default class CustomerController extends AbstractController {
 			const customerId: number = parseInt(req.params.id, 10);
 			if (isNaN(customerId)) {
 				res.status(400).json({
-					status: false,
 					errors: 'Invalid ID',
 				});
 				return;
 			}
-			const car = await this.customerService.getById(customerId);
-			if (!car) {
+			const customer = await this.customerService.getById(customerId);
+			if (!customer) {
 				res.status(404).json({
-					status: false,
-					errors: `Error fetching the customers with the entered ID ${customerId}`,
+					errors: `No customer found with the entered ID ${customerId}`,
 				});
-				this.response.errors = ``;
 				return;
 			}
 			await this.customerService.delete(customerId);
 			res.json({
-				status: true,
 				message: 'Customer successfully deleted',
 			});
 		} catch (error) {
-			this.response.status = false;
-			this.response.errors = 'Error deleting the customer.';
-			res.status(500).json(this.response);
+			console.error(error);
+			res.status(500).json({
+				errors: 'Error deleting the customer.',
+			});
 		}
 	}
 	public async update(req: Request, res: Response): Promise<void> {
@@ -118,39 +117,29 @@ export default class CustomerController extends AbstractController {
 			const customerId: number = parseInt(req.params.id, 10);
 			if (isNaN(customerId)) {
 				res.status(400).json({
-					status: false,
 					errors: 'Customer ID Invalid',
 				});
 				return;
 			}
-			this.response.data = await this.customerService.getById(customerId);
-			if (!this.response.data) {
+			const existingCustomer =
+				await this.customerService.getById(customerId);
+			if (!existingCustomer) {
 				res.status(404).json({
-					status: false,
-					errors: `Error fetching the customers with the entered ID ${customerId}`,
+					errors: `No customer found with the entered ID ${customerId}`,
 				});
 				return;
 			}
-			await Promise.all(
-				updateCustomerValidations.map((validation) =>
-					validation.run(req)
-				)
-			);
-			const errors = validationResult(req);
-			if (!errors.isEmpty()) {
-				res.status(400).json({ errors: errors.array() });
-				return;
-			}
 			const updatedCustomerData: ICustomer = req.body;
-			this.response.data = await this.customerService.update(
-				customerId,
-				updatedCustomerData
-			);
-			res.status(200).json(this.response);
+			await this.customerService.update(customerId, updatedCustomerData);
+			res.status(200).json({
+				data: updatedCustomerData,
+				message: 'Customer successfully updated',
+			});
 		} catch (error) {
-			this.response.status = false;
-			this.response.errors = 'Error creating the customer.';
-			res.status(500).json(this.response);
+			console.error(error);
+			res.status(500).json({
+				errors: 'Error updating the customer.',
+			});
 		}
 	}
 }

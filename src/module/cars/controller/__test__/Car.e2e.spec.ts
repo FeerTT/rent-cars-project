@@ -14,6 +14,7 @@ import {
 	invalidCarId,
 	nonExistingCarId,
 } from './fixtures/TestDeleteCars';
+import ICar from '../../entity/ICar';
 
 describe('End to end test', () => {
 	let app: express.Express;
@@ -33,16 +34,14 @@ describe('End to end test', () => {
 	});
 
 	it('should get all cars successfully', async () => {
-		mockCarService.getAll = jest.fn().mockResolvedValueOnce(carsData);
+		const mockedGetAll = mockCarService.getAll as jest.Mock<
+			Promise<ICar[]>
+		>;
+		mockedGetAll.mockResolvedValueOnce(carsData);
 		const response = await request(app).get('/cars');
-
 		expect(response.status).toBe(200);
-		expect(response.body).toEqual({
-			status: true,
-			errors: '',
-			data: carsData,
-		});
-		expect(mockCarService.getAll).toHaveBeenCalled();
+		expect(response.body).toEqual(carsData);
+		expect(mockedGetAll).toHaveBeenCalled();
 	});
 
 	it('should respond with 500 if an error occurs during getAll', async () => {
@@ -52,41 +51,44 @@ describe('End to end test', () => {
 		const response = await request(app).get('/cars');
 		expect(response.status).toBe(500);
 		expect(response.body).toEqual({
-			status: false,
-			errors: 'Error getting all the cars',
-			data: null,
+			errors: 'Error getting all the cars:',
 		});
 		expect(mockCarService.getAll).toHaveBeenCalled();
 	});
 
 	it('should create a car successfully with valid data', async () => {
 		mockCarService.create = jest.fn().mockResolvedValueOnce(createdCarData);
+
 		const response = await request(app)
 			.post('/cars')
 			.send(JSON.stringify(carData))
 			.set('Content-Type', 'application/json');
+
 		expect(response.status).toBe(201);
 		expect(response.body).toEqual({
-			status: true,
-			errors: '',
 			data: createdCarData,
+			message: 'Car created successfully',
 		});
+
 		expect(mockCarService.create).toHaveBeenCalledWith(carData);
 	});
 
 	it('should respond with 400 if invalid car ID', async () => {
 		const response = await request(app).put('/cars/invalidId');
 		expect(response.status).toBe(400);
-		expect(response.body.status).toBe(false);
 		expect(response.body.errors).toBe('Invalid car ID');
+
+		expect(response.body.status).toBeUndefined();
 	});
 
 	it('should respond with 404 if car ID not found', async () => {
 		mockCarService.getById = jest.fn().mockResolvedValueOnce(null);
 		const response = await request(app).put('/cars/1');
 		expect(response.status).toBe(404);
-		expect(response.body.status).toBe(false);
-		expect(response.body.errors).toBe('No car was found with ID 1');
+		expect(response.body).toEqual({
+			errors: 'No car was found with ID 1',
+		});
+		expect(response.body.status).toBeUndefined();
 	});
 
 	it('should update car data successfully', async () => {
@@ -94,8 +96,10 @@ describe('End to end test', () => {
 		mockCarService.update = jest.fn().mockResolvedValueOnce(responseUpdate);
 		const response = await request(app).put('/cars/1').send(updatedCarData);
 		expect(response.status).toBe(200);
-		expect(response.body.status).toBe(true);
-		expect(response.body.message).toBe('Car updated successfully');
+		expect(response.body).toEqual({
+			message: 'Car updated successfully',
+		});
+		expect(response.body.status).toBeUndefined();
 		expect(mockCarService.update).toHaveBeenCalledWith(1, updatedCarData);
 	});
 
@@ -104,7 +108,9 @@ describe('End to end test', () => {
 		mockCarService.delete = jest.fn().mockResolvedValueOnce(deleteResponse);
 		const response = await request(app).delete(`/cars/${carIdToDelete}`);
 		expect(response.status).toBe(200);
-		expect(response.body).toEqual(deleteResponse);
+		expect(response.body).toEqual({
+			message: 'Car deleted successfully',
+		});
 		expect(mockCarService.getById).toHaveBeenCalledWith(carIdToDelete);
 		expect(mockCarService.delete).toHaveBeenCalledWith(carIdToDelete);
 	});
@@ -113,8 +119,7 @@ describe('End to end test', () => {
 		const response = await request(app).delete(`/cars/${invalidCarId}`);
 		expect(response.status).toBe(400);
 		expect(response.body).toEqual({
-			status: false,
-			errors: 'Invalid car ID.',
+			errors: 'Invalid car ID',
 		});
 		expect(mockCarService.getById).not.toHaveBeenCalled();
 	});
@@ -123,10 +128,10 @@ describe('End to end test', () => {
 		mockCarService.getById = jest.fn().mockResolvedValueOnce(null);
 		const response = await request(app).delete(`/cars/${nonExistingCarId}`);
 		expect(response.status).toBe(404);
-		expect(response.body).toEqual({
-			status: false,
-			errors: `No car was found with ID ${nonExistingCarId}`,
-		});
+		expect(response.body).toHaveProperty(
+			'errors',
+			`No car was found with ID ${nonExistingCarId}`
+		);
 		expect(mockCarService.getById).toHaveBeenCalledWith(nonExistingCarId);
 		expect(mockCarService.delete).not.toHaveBeenCalled();
 	});

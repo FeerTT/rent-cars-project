@@ -1,5 +1,7 @@
+import { CarsModel } from '../../cars/CarsModule';
 import { CustomerModel } from '../CustomerModule';
 import ICustomer from '../entity/ICustomers';
+import { Sequelize } from 'sequelize-typescript';
 
 export default class CustomerRepository {
 	private customerModel: typeof CustomerModel;

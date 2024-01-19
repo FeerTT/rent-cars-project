@@ -4,7 +4,7 @@ import ConfigureDI from './config/di';
 import { CarsModule } from './module/cars/CarsModule';
 import { RentModule } from './module/rents/RentModule';
 import { CustomerModule } from './module/customers/CustomerModule';
-
+import { initDB } from './config/init.db';
 async function init(): Promise<void> {
 	try {
 		dotenv.config();

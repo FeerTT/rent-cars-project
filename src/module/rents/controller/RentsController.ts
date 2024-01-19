@@ -1,6 +1,5 @@
 import AbstractController from '../../AbstractsController';
 import { Application, Request, Response } from 'express';
-import IResponse from '../entity/IRentResponse';
 import RentService from '../service/RentsService';
 import IRent from '../entity/IRent';
 import {
@@ -11,7 +10,7 @@ import { validationResult } from 'express-validator';
 
 export default class RentController extends AbstractController {
 	public readonly ROUTE_BASE: string;
-	private response: IResponse = { status: true, errors: '', data: null };
+
 	private rentService: RentService;
 	constructor(rentService: RentService) {
 		super();
@@ -33,54 +32,50 @@ export default class RentController extends AbstractController {
 			);
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
-				res.status(400).json({ errors: errors.array() });
+				res.status(400).json(errors.array());
 				return;
 			}
-
 			const rent: IRent = req.body;
-			this.response.data = await this.rentService.create(rent);
-			res.status(201).json(this.response);
+			await this.rentService.create(rent);
+			res.status(201).json({ message: 'Rent successfully created' });
 		} catch (error) {
-			this.response.status = false;
-			this.response.errors = 'Error creating the rent';
-			res.status(500).json(this.response);
+			console.error(error);
+			res.status(500).json({ error: 'Error creating the rent' });
 		}
 	}
 
 	public async index(req: Request, res: Response): Promise<void> {
 		try {
-			this.response.data = await this.rentService.getAll();
-			if (this.response.data) {
-				this.response.status = true;
-				res.status(200).json(this.response);
+			const rents = await this.rentService.getAll();
+			if (rents) {
+				res.status(200).json({ data: rents });
 			}
 		} catch (error) {
-			this.response.status = false;
-			this.response.errors = 'Error getting all the rents';
-			res.status(500).json(this.response);
+			console.error(error);
+			res.status(500).json({
+				error: 'Error getting all the rents',
+			});
 		}
 	}
 
-	public async getById(req: Request, res: Response): Promise<IRent> {
+	public async getById(req: Request, res: Response): Promise<void> {
 		try {
 			const rentId: number = parseInt(req.params.id, 10);
-			this.response.data = await this.rentService.getById(rentId);
-			if (!this.response.data) {
-				this.response.status = false;
-				this.response.errors = `No rent found with ID ${rentId}`;
-				res.status(404).json(this.response);
-				this.response.errors = ``;
+			const rent = await this.rentService.getById(rentId);
+			if (!rent) {
+				res.status(404).json({
+					errors: `No rent found with ID ${rentId}`,
+				});
 				return;
 			}
 			res.json({
-				status: true,
-				data: this.response.data,
+				data: rent,
 			});
 		} catch (error) {
-			this.response.status = false;
-			this.response.errors = `Error getting the rent with the entered ID`;
-			res.status(500).json(this.response);
-			this.response.errors = '';
+			console.error(error);
+			res.status(500).json({
+				errors: 'Error getting the rent with the entered ID',
+			});
 		}
 	}
 
@@ -89,7 +84,6 @@ export default class RentController extends AbstractController {
 			const rentId: number = parseInt(req.params.id, 10);
 			if (isNaN(rentId)) {
 				res.status(400).json({
-					status: false,
 					errors: 'Invalid rent ID',
 				});
 				return;
@@ -99,28 +93,27 @@ export default class RentController extends AbstractController {
 			);
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
-				res.status(400).json({ errors: errors.array() });
+				res.status(400).json({
+					errors: errors.array(),
+				});
 				return;
 			}
-			this.response.data = await this.rentService.getById(rentId);
-			if (!this.response.data) {
+			const existingRent = await this.rentService.getById(rentId);
+			if (!existingRent) {
 				res.status(404).json({
-					status: false,
 					errors: `No rent was found with ID ${rentId}`,
 				});
 				return;
 			}
-
 			const updatedRentData: IRent = req.body;
 			await this.rentService.update(rentId, updatedRentData);
-
 			res.status(200).json({
-				status: true,
+				data: updatedRentData,
 				message: 'Rent updated successfully',
 			});
 		} catch (error) {
+			console.error(error);
 			res.status(500).json({
-				status: false,
 				errors: 'Error updating the rent.',
 			});
 		}
@@ -131,29 +124,26 @@ export default class RentController extends AbstractController {
 			const rentId: number = parseInt(req.params.id, 10);
 			if (isNaN(rentId)) {
 				res.status(400).json({
-					status: false,
 					errors: 'Invalid rent ID.',
 				});
 				return;
 			}
-			this.response.data = await this.rentService.getById(rentId);
-			if (!this.response.data) {
+			const existingRent = await this.rentService.getById(rentId);
+			if (!existingRent) {
 				res.status(404).json({
-					status: false,
 					errors: `No rent was found with ID ${rentId}`,
 				});
-				this.response.errors = ``;
 				return;
 			}
 			await this.rentService.delete(rentId);
 			res.json({
-				status: true,
 				message: 'Rent deleted successfully',
 			});
 		} catch (error) {
-			this.response.status = false;
-			this.response.errors = 'Error deleting the rent.';
-			res.status(500).json(this.response);
+			console.error(error);
+			res.status(500).json({
+				errors: 'Error deleting the rent.',
+			});
 		}
 	}
 }

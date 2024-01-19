@@ -8,6 +8,8 @@ import {
 } from './fixtures/TetsRentsRepository';
 
 describe('RentsRepository', () => {
+	const mockCarModel: any = {};
+	const mockCustomerModel: any = {};
 	const mockRentModel: any = {
 		create: jest.fn(),
 		findAll: jest.fn(),
@@ -15,7 +17,11 @@ describe('RentsRepository', () => {
 		findOne: jest.fn(),
 		update: jest.fn(),
 	} as unknown as RentModel;
-	const rentsRepository = new RentRepository(mockRentModel);
+	const rentsRepository = new RentRepository(
+		mockRentModel,
+		mockCarModel,
+		mockCustomerModel
+	);
 
 	it('should create a rent', async () => {
 		mockRentModel.create.mockResolvedValueOnce(CreatedRent);
@@ -43,18 +49,20 @@ describe('RentsRepository', () => {
 		expect(result).toEqual(destroyedRows);
 	});
 
-	it('should get a car by ID', async () => {
+	it('should get a rent by ID', async () => {
 		mockRentModel.findOne.mockResolvedValueOnce(CreatedRent);
 		const result = await rentsRepository.getById(RentId);
-		expect(mockRentModel.findOne).toHaveBeenCalledWith({
-			where: {
-				id: RentId,
-			},
-		});
+		expect(mockRentModel.findOne).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: {
+					id: RentId,
+				},
+			})
+		);
 		expect(result).toEqual(CreatedRent);
 	});
 
-	it('should update a car by ID', async () => {
+	it('should update a rent by ID', async () => {
 		const updatedRows = 1;
 		mockRentModel.update.mockResolvedValueOnce(updatedRows);
 		const result = await rentsRepository.update(RentId, ModifiedRentData);

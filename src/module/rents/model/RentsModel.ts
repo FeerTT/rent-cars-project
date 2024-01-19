@@ -5,6 +5,8 @@ import {
 	Column,
 	ForeignKey,
 	BelongsTo,
+	Sequelize,
+	HasMany,
 } from 'sequelize-typescript';
 import { CarsModel } from '../../cars/CarsModule';
 import { CustomerModel } from '../../customers/CustomerModule';
@@ -13,20 +15,6 @@ import { CustomerModel } from '../../customers/CustomerModule';
 export default class RentModel extends Model {
 	@Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
 	id!: number;
-
-	@ForeignKey(() => CarsModel)
-	@Column({ type: DataType.INTEGER, allowNull: false })
-	carId!: number;
-
-	@ForeignKey(() => CustomerModel)
-	@Column({ type: DataType.INTEGER, allowNull: true })
-	customerId!: number;
-
-	@BelongsTo(() => CarsModel)
-	car!: CarsModel;
-
-	@BelongsTo(() => CustomerModel)
-	customer!: CustomerModel;
 
 	@Column({ type: DataType.FLOAT, allowNull: false })
 	unitPrice!: number;
@@ -45,4 +33,10 @@ export default class RentModel extends Model {
 
 	@Column({ type: DataType.BOOLEAN, allowNull: false })
 	isPaid!: boolean;
+
+	@BelongsTo(() => CarsModel, 'carId')
+	car!: CarsModel;
+
+	@BelongsTo(() => CustomerModel, 'customerId')
+	customer!: CustomerModel;
 }

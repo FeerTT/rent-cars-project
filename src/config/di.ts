@@ -1,5 +1,4 @@
 import { DIContainer } from 'rsdi';
-import { Sequelize } from 'sequelize-typescript';
 import {
 	CarsModule,
 	CarsModel,
@@ -21,18 +20,24 @@ import {
 	RentRepository,
 	RentService,
 } from '../module/rents/RentModule';
+import { Sequelize } from 'sequelize-typescript';
+import { initDB } from './init.db';
 
 export default class ConfigureDI {
-	private carsModule = new CarsModule();
-	private CustomerModule = new CustomerModule();
-	//public container: DIcontainer
-	public container: any;
+	public container: DIContainer;
+	public sequelizeInstance: Sequelize;
 
-	public init = async (): Promise<void> => {
-		await this.configureMainSequelizeDatabase();
-		await this.configureModels();
-		this.container = new DIContainer()
-			.add('sequelize', () => this.configureMainSequelizeDatabase())
+	constructor() {
+		this.container = new DIContainer();
+	}
+
+	public async initializeSequelize(): Promise<void> {
+		this.sequelizeInstance = await initDB();
+	}
+
+	public addCarsDefinitions = (container: any) => {
+		container
+			.add('sequelize', () => this.sequelizeInstance)
 			.add('carsModel', () => CarsModel)
 			.add(
 				'carRepository',
@@ -45,7 +50,10 @@ export default class ConfigureDI {
 			.add(
 				'carsController',
 				({ carsService }) => new CarsController(carsService)
-			)
+			);
+	};
+	public addCustomerDefinitions = (container: DIContainer) => {
+		container
 			.add('customersModel', () => CustomerModel)
 			.add(
 				'customerRepository',
@@ -59,11 +67,18 @@ export default class ConfigureDI {
 			.add(
 				'customerController',
 				({ customerService }) => new CustomerController(customerService)
-			)
+			);
+	};
+
+	public addRentsDefinitions = (container: any) => {
+		const costumerModel = container.get('customersModel');
+		const carsModel = container.get('carsModel');
+		container
 			.add('rentsModel', () => RentModel)
 			.add(
 				'rentsRepository',
-				({ rentsModel }) => new RentRepository(rentsModel)
+				({ rentsModel, customersModel, carsModel }) =>
+					new RentRepository(rentsModel, customersModel, carsModel)
 			)
 			.add(
 				'rentsService',
@@ -74,18 +89,12 @@ export default class ConfigureDI {
 				({ rentsService }) => new RentController(rentsService)
 			);
 	};
-	private configureMainSequelizeDatabase = async (): Promise<Sequelize> => {
-		const sequelize = new Sequelize({
-			dialect: 'sqlite',
-			storage: process.env.DB_PATH || '',
-			models: [CarsModel, CustomerModel, RentModel],
-		});
-		return sequelize;
-	};
 
-	private configureModels = async (): Promise<void> => {
-		CarsModel.sync();
-		CustomerModel.sync();
-		RentModel.sync();
+	public init = async (): Promise<DIContainer> => {
+		await this.initializeSequelize();
+		this.addCarsDefinitions(this.container);
+		this.addCustomerDefinitions(this.container);
+		this.addRentsDefinitions(this.container);
+		return this.container;
 	};
 }
