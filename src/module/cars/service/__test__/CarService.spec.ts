@@ -1,4 +1,4 @@
-import { CarsRepository, CarService } from '../../CarModule';
+import { CarRepository, CarService } from '../../CarModule';
 import { carData, createdCar } from './fixtures/TestsCreateData';
 import { carList } from './fixtures/TestsGetAllData';
 import { carId } from './fixtures/TestsUpdateData';
@@ -10,7 +10,7 @@ describe('CarsService', () => {
 		getAll: jest.fn(),
 		update: jest.fn(),
 		delete: jest.fn(),
-	} as unknown as CarsRepository;
+	} as unknown as CarRepository;
 
 	const carService = new CarService(mockCarRepository);
 

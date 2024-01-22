@@ -6,8 +6,8 @@ import { Application } from 'express';
 class RentModule {
 	constructor() {}
 	public init = async (app: Application, container: any) => {
-		const { rentsController } = container;
-		await rentsController.configureRoutes(app);
+		const { rentController } = container;
+		await rentController.configureRoutes(app);
 	};
 }
 

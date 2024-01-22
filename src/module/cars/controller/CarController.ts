@@ -8,14 +8,14 @@ import {
 	updateCarValidations,
 } from './validation/validations';
 
-export default class CarsController extends AbstractController {
+export default class CarController extends AbstractController {
 	public readonly ROUTE_BASE: string;
-	private carsService: CarService;
+	private carService: CarService;
 
-	constructor(carsService: CarService) {
+	constructor(carService: CarService) {
 		super();
 		this.ROUTE_BASE = '/cars';
-		this.carsService = carsService;
+		this.carService = carService;
 	}
 
 	public async configureRoutes(app: Application): Promise<void> {
@@ -29,7 +29,7 @@ export default class CarsController extends AbstractController {
 
 	public async getAll(req: Request, res: Response): Promise<void> {
 		try {
-			const response = await this.carsService.getAll();
+			const response = await this.carService.getAll();
 			if (response) {
 				res.status(200).json(response);
 			}
@@ -51,7 +51,7 @@ export default class CarsController extends AbstractController {
 				return;
 			}
 			const car: ICar = req.body;
-			const createdCar = await this.carsService.create(car);
+			const createdCar = await this.carService.create(car);
 			res.status(201).json({
 				data: createdCar,
 				message: 'Car created successfully',
@@ -73,7 +73,7 @@ export default class CarsController extends AbstractController {
 				});
 				return;
 			}
-			const car = await this.carsService.getById(carId);
+			const car = await this.carService.getById(carId);
 			if (!car) {
 				res.status(404).json({
 					errors: `No car found with ID ${carId}`,
@@ -100,7 +100,7 @@ export default class CarsController extends AbstractController {
 				});
 				return;
 			}
-			const existingCar = await this.carsService.getById(carId);
+			const existingCar = await this.carService.getById(carId);
 			if (!existingCar) {
 				res.status(404).json({
 					errors: `No car was found with ID ${carId}`,
@@ -118,7 +118,7 @@ export default class CarsController extends AbstractController {
 				return;
 			}
 			const updatedCarData: ICar = req.body;
-			await this.carsService.update(carId, updatedCarData);
+			await this.carService.update(carId, updatedCarData);
 			res.status(200).json({
 				message: 'Car updated successfully',
 			});
@@ -138,14 +138,14 @@ export default class CarsController extends AbstractController {
 				});
 				return;
 			}
-			const carToDelete = await this.carsService.getById(carId);
+			const carToDelete = await this.carService.getById(carId);
 			if (!carToDelete) {
 				res.status(404).json({
 					errors: `No car was found with ID ${carId}`,
 				});
 				return;
 			}
-			await this.carsService.delete(carId);
+			await this.carService.delete(carId);
 			res.json({
 				message: 'Car deleted successfully',
 			});

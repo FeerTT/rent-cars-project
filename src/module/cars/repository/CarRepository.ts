@@ -1,7 +1,7 @@
 import { CarModel } from '../CarModule';
 import ICar from '../entity/ICar';
 
-export default class CarsRepository {
+export default class CarRepository {
 	private carModel: typeof CarModel;
 
 	constructor(carModel: typeof CarModel) {

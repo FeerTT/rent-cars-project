@@ -1,10 +1,10 @@
-import { CarModel, CarsRepository } from '../../CarModule';
+import { CarModel, CarRepository } from '../../CarModule';
 import { carToCreate, createdCar } from './fixtures/TestsCreateData';
 import { expectedCars } from './fixtures/TestsGetAllData';
 import { expectedCar, carId } from './fixtures/TestsGetIdData';
 import { carIdToUpdate, updatedCarData } from './fixtures/TestsUpdateData';
 
-describe('CarsRepository', () => {
+describe('CarRepository', () => {
 	const mockCarModel: any = {
 		create: jest.fn(),
 		findAll: jest.fn(),
@@ -12,7 +12,7 @@ describe('CarsRepository', () => {
 		findOne: jest.fn(),
 		update: jest.fn(),
 	} as unknown as CarModel;
-	const carsRepository = new CarsRepository(mockCarModel);
+	const carsRepository = new CarRepository(mockCarModel);
 
 	it('should create a car', async () => {
 		mockCarModel.create.mockResolvedValueOnce(createdCar);

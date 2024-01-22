@@ -25,6 +25,7 @@ export default class RentController extends AbstractController {
 		app.put(`${ROUTE}/:id`, this.update.bind(this));
 		app.delete(`${ROUTE}/:id`, this.delete.bind(this));
 	}
+
 	public async create(req: Request, res: Response): Promise<void> {
 		try {
 			await Promise.all(
@@ -37,16 +38,25 @@ export default class RentController extends AbstractController {
 			}
 			const rentData: IRent = req.body;
 			const createdRent = await this.rentService.create(rentData);
+			if (!createdRent) {
+				res.status(500).json({ error: 'Error creating the rent' });
+				return;
+			}
 			const rentWithDetails = await this.rentService.getById(
 				createdRent.id
 			);
+			if (!rentWithDetails) {
+				res.status(500).json({
+					error: 'Error retrieving the created rent',
+				});
+				return;
+			}
 			res.status(201).json(rentWithDetails);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: 'Error creating the rent' });
 		}
 	}
-
 	public async getAll(req: Request, res: Response): Promise<void> {
 		try {
 			const rents = await this.rentService.getAll();

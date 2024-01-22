@@ -1,14 +1,14 @@
-import CarsController from './controller/CarController';
+import CarController from './controller/CarController';
 import { Application } from 'express';
 import CarService from './service/CarService';
-import CarsRepository from './repository/CarRepository';
+import CarRepository from './repository/CarRepository';
 import CarModel from './model/CarModel';
 
-class CarsModule {
+class CarModule {
 	constructor() {}
 	public init = async (app: Application, container: any) => {
-		const { carsController } = container;
-		await carsController.configureRoutes(app);
+		const { carController } = container;
+		await carController.configureRoutes(app);
 	};
 }
-export { CarModel, CarsModule, CarsController, CarService, CarsRepository };
+export { CarModel, CarModule, CarController, CarService, CarRepository };

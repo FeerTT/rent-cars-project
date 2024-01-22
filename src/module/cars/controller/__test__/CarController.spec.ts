@@ -1,4 +1,4 @@
-import { CarService, CarsController } from '../../CarModule';
+import { CarService, CarController } from '../../CarModule';
 import { Request, Response } from 'express';
 import { createCarFixture } from './fixtures/TestCreateCars';
 import { viewCarFixture } from './fixtures/TestViewCars';
@@ -16,7 +16,7 @@ describe('CarsController', () => {
 		update: jest.fn(),
 		getById: jest.fn(),
 	} as unknown as CarService;
-	const carsController = new CarsController(mockCarService);
+	const carsController = new CarController(mockCarService);
 
 	it('should call carsService.getAll once', async () => {
 		const req = {} as Request;

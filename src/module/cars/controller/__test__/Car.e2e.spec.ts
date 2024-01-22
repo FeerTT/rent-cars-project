@@ -1,6 +1,6 @@
 import request from 'supertest';
 import express from 'express';
-import { CarsController, CarService } from '../../CarModule';
+import { CarController, CarService } from '../../CarModule';
 import { carsData, carData, createdCarData } from './fixtures/TestCreateCars';
 import {
 	mockCarData,
@@ -29,7 +29,7 @@ describe('End to end test', () => {
 		} as unknown as CarService;
 		app = express();
 		app.use(express.json());
-		const carsController = new CarsController(mockCarService);
+		const carsController = new CarController(mockCarService);
 		carsController.configureRoutes(app);
 	});
 

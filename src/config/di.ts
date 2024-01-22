@@ -1,20 +1,17 @@
 import { DIContainer } from 'rsdi';
 import {
-	CarsModule,
 	CarModel,
-	CarsController,
+	CarController,
 	CarService,
-	CarsRepository,
+	CarRepository,
 } from '../module/cars/CarModule';
 import {
-	CustomerModule,
 	CustomerController,
 	CustomerRepository,
 	CustomerService,
 	CustomerModel,
 } from '../module/customers/CustomerModule';
 import {
-	RentModule,
 	RentController,
 	RentModel,
 	RentRepository,
@@ -38,26 +35,23 @@ export default class ConfigureDI {
 	public addCarDefinitions = (container: any) => {
 		container
 			.add('sequelize', () => this.sequelizeInstance)
-			.add('carsModel', () => CarModel)
+			.add('carModel', () => CarModel)
+			.add('carRepository', ({ carModel }) => new CarRepository(carModel))
 			.add(
-				'carRepository',
-				({ carsModel }) => new CarsRepository(carsModel)
-			)
-			.add(
-				'carsService',
+				'carService',
 				({ carRepository }) => new CarService(carRepository)
 			)
 			.add(
-				'carsController',
-				({ carsService }) => new CarsController(carsService)
+				'carController',
+				({ carService }) => new CarController(carService)
 			);
 	};
 	public addCustomerDefinitions = (container: any) => {
 		container
-			.add('customersModel', () => CustomerModel)
+			.add('customerModel', () => CustomerModel)
 			.add(
 				'customerRepository',
-				({ customersModel }) => new CustomerRepository(CustomerModel)
+				({ customerModel }) => new CustomerRepository(customerModel)
 			)
 			.add(
 				'customerService',
@@ -71,22 +65,22 @@ export default class ConfigureDI {
 	};
 
 	public addRentDefinitions = (container: any) => {
-		container.get('carsModel');
-		container.get('customersModel');
+		container.get('carModel');
+		container.get('customerModel');
 		container
-			.add('rentsModel', () => RentModel)
+			.add('rentModel', () => RentModel)
 			.add(
-				'rentsRepository',
-				({ rentsModel, customersModel, carsModel }) =>
-					new RentRepository(rentsModel, customersModel, carsModel)
+				'rentRepository',
+				({ rentModel, customerModel, carModel }) =>
+					new RentRepository(rentModel, customerModel, carModel)
 			)
 			.add(
-				'rentsService',
-				({ rentsRepository }) => new RentService(rentsRepository)
+				'rentService',
+				({ rentRepository }) => new RentService(rentRepository)
 			)
 			.add(
-				'rentsController',
-				({ rentsService }) => new RentController(rentsService)
+				'rentController',
+				({ rentService }) => new RentController(rentService)
 			);
 	};
 
