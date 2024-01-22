@@ -1,7 +1,7 @@
 import AbstractController from '../../AbstractsController';
 import { Request, Response, Application } from 'express';
 import ICar from '../entity/ICar';
-import { CarService } from '../CarsModule';
+import { CarService } from '../CarModule';
 import { body, validationResult } from 'express-validator';
 import {
 	CreateCarValidation,
@@ -21,13 +21,13 @@ export default class CarsController extends AbstractController {
 	public async configureRoutes(app: Application): Promise<void> {
 		const ROUTE: string = this.ROUTE_BASE;
 		app.post(`${ROUTE}`, this.create.bind(this));
-		app.get(`${ROUTE}`, this.index.bind(this));
+		app.get(`${ROUTE}`, this.getAll.bind(this));
 		app.get(`${ROUTE}/:id`, this.getById.bind(this));
 		app.put(`${ROUTE}/:id`, this.update.bind(this));
 		app.delete(`${ROUTE}/:id`, this.delete.bind(this));
 	}
 
-	public async index(req: Request, res: Response): Promise<void> {
+	public async getAll(req: Request, res: Response): Promise<void> {
 		try {
 			const response = await this.carsService.getAll();
 			if (response) {

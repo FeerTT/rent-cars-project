@@ -1,36 +1,36 @@
-import { CarsModel } from '../../cars/CarsModule';
+import { CarModel } from '../../cars/CarModule';
 import { CustomerModel } from '../../customers/CustomerModule';
 import { RentModel } from '../RentModule';
 import IRent from '../entity/IRent';
 
 export default class RentRepository {
-	private rentsModel: typeof RentModel;
-	private customersModel: typeof CustomerModel;
-	private carsModel: typeof CarsModel;
+	private rentModel: typeof RentModel;
+	private customerModel: typeof CustomerModel;
+	private carModel: typeof CarModel;
 	constructor(
-		rentsModel: typeof RentModel,
-		customersModel: typeof CustomerModel,
-		carsModel: typeof CarsModel
+		rentModel: typeof RentModel,
+		customerModel: typeof CustomerModel,
+		carModel: typeof CarModel
 	) {
-		this.customersModel = customersModel;
-		this.rentsModel = rentsModel;
-		this.carsModel = carsModel;
+		this.customerModel = customerModel;
+		this.rentModel = rentModel;
+		this.carModel = carModel;
 	}
 
 	public async create(rent: any): Promise<IRent> {
-		return this.rentsModel.create(rent);
+		return this.rentModel.create(rent);
 	}
 	public async getAll(): Promise<IRent[]> {
-		return this.rentsModel.findAll();
+		return this.rentModel.findAll();
 	}
 	public async getById(rentId: number): Promise<IRent> {
-		return this.rentsModel.findOne({
+		return this.rentModel.findOne({
 			where: {
 				id: rentId,
 			},
 			include: [
 				{
-					model: this.customersModel,
+					model: this.customerModel,
 					attributes: [
 						'firstName',
 						'lastName',
@@ -40,10 +40,11 @@ export default class RentRepository {
 						'address',
 						'phone',
 						'email',
+						'birthDate',
 					],
 				},
 				{
-					model: this.carsModel,
+					model: this.carModel,
 					attributes: [
 						'brand',
 						'model',
@@ -59,14 +60,14 @@ export default class RentRepository {
 		});
 	}
 	public async delete(rentId: number): Promise<any> {
-		return this.rentsModel.destroy({
+		return this.rentModel.destroy({
 			where: {
 				id: rentId,
 			},
 		});
 	}
 	public async update(rentId: number, updatedRentData: any): Promise<any> {
-		return await this.rentsModel.update(updatedRentData, {
+		return await this.rentModel.update(updatedRentData, {
 			where: {
 				id: rentId,
 			},

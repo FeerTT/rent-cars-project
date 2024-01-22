@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-import { CarsModel } from '../module/cars/CarsModule';
+import { CarModel } from '../module/cars/CarModule';
 import { CustomerModel } from '../module/customers/CustomerModule';
 import { RentModel } from '../module/rents/RentModule';
 
@@ -7,7 +7,7 @@ const configureMainSequelizeDatabase = async (): Promise<Sequelize> => {
 	const sequelize = new Sequelize({
 		dialect: 'sqlite',
 		storage: process.env.DB_PATH || '',
-		models: [CarsModel, CustomerModel, RentModel],
+		models: [CarModel, CustomerModel, RentModel],
 	});
 	await sequelize.sync();
 	return sequelize;

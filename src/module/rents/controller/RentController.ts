@@ -1,6 +1,6 @@
 import AbstractController from '../../AbstractsController';
 import { Application, Request, Response } from 'express';
-import RentService from '../service/RentsService';
+import RentService from '../service/RentService';
 import IRent from '../entity/IRent';
 import {
 	CreateRentValidation,
@@ -20,7 +20,7 @@ export default class RentController extends AbstractController {
 	public async configureRoutes(app: Application): Promise<void> {
 		const ROUTE: string = this.ROUTE_BASE;
 		app.post(`${ROUTE}`, this.create.bind(this));
-		app.get(`${ROUTE}`, this.index.bind(this));
+		app.get(`${ROUTE}`, this.getAll.bind(this));
 		app.get(`${ROUTE}/:id`, this.getById.bind(this));
 		app.put(`${ROUTE}/:id`, this.update.bind(this));
 		app.delete(`${ROUTE}/:id`, this.delete.bind(this));
@@ -35,16 +35,19 @@ export default class RentController extends AbstractController {
 				res.status(400).json(errors.array());
 				return;
 			}
-			const rent: IRent = req.body;
-			await this.rentService.create(rent);
-			res.status(201).json({ message: 'Rent successfully created' });
+			const rentData: IRent = req.body;
+			const createdRent = await this.rentService.create(rentData);
+			const rentWithDetails = await this.rentService.getById(
+				createdRent.id
+			);
+			res.status(201).json(rentWithDetails);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: 'Error creating the rent' });
 		}
 	}
 
-	public async index(req: Request, res: Response): Promise<void> {
+	public async getAll(req: Request, res: Response): Promise<void> {
 		try {
 			const rents = await this.rentService.getAll();
 			if (rents) {
@@ -109,7 +112,6 @@ export default class RentController extends AbstractController {
 			await this.rentService.update(rentId, updatedRentData);
 			res.status(200).json({
 				data: updatedRentData,
-				message: 'Rent updated successfully',
 			});
 		} catch (error) {
 			console.error(error);

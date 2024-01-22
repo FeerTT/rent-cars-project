@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 import ConfigureDI from './config/di';
-import { CarsModule } from './module/cars/CarsModule';
+import { CarsModule } from './module/cars/CarModule';
 import { RentModule } from './module/rents/RentModule';
 import { CustomerModule } from './module/customers/CustomerModule';
-import { initDB } from './config/init.db';
+
 async function init(): Promise<void> {
 	try {
 		dotenv.config();

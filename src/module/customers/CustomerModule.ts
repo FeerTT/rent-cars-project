@@ -1,8 +1,8 @@
-import CustomerModel from './model/CustomersModel';
+import CustomerModel from './model/CustomerModel';
 import { Application } from 'express';
-import CustomerController from './controller/CustomersController';
-import CustomerService from './service/CustomersService';
-import CustomerRepository from './repository/CustomersRepository';
+import CustomerController from './controller/CustomerController';
+import CustomerService from './service/CustomerService';
+import CustomerRepository from './repository/CustomerRepository';
 
 class CustomerModule {
 	constructor() {}

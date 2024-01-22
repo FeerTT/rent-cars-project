@@ -1,17 +1,17 @@
 import { DIContainer } from 'rsdi';
 import {
 	CarsModule,
-	CarsModel,
+	CarModel,
 	CarsController,
 	CarService,
 	CarsRepository,
-} from '../module/cars/CarsModule';
+} from '../module/cars/CarModule';
 import {
 	CustomerModule,
 	CustomerController,
-	CustomerModel,
 	CustomerRepository,
 	CustomerService,
+	CustomerModel,
 } from '../module/customers/CustomerModule';
 import {
 	RentModule,
@@ -35,10 +35,10 @@ export default class ConfigureDI {
 		this.sequelizeInstance = await initDB();
 	}
 
-	public addCarsDefinitions = (container: any) => {
+	public addCarDefinitions = (container: any) => {
 		container
 			.add('sequelize', () => this.sequelizeInstance)
-			.add('carsModel', () => CarsModel)
+			.add('carsModel', () => CarModel)
 			.add(
 				'carRepository',
 				({ carsModel }) => new CarsRepository(carsModel)
@@ -52,12 +52,12 @@ export default class ConfigureDI {
 				({ carsService }) => new CarsController(carsService)
 			);
 	};
-	public addCustomerDefinitions = (container: DIContainer) => {
+	public addCustomerDefinitions = (container: any) => {
 		container
 			.add('customersModel', () => CustomerModel)
 			.add(
 				'customerRepository',
-				({ customersModel }) => new CustomerRepository(customersModel)
+				({ customersModel }) => new CustomerRepository(CustomerModel)
 			)
 			.add(
 				'customerService',
@@ -70,9 +70,9 @@ export default class ConfigureDI {
 			);
 	};
 
-	public addRentsDefinitions = (container: any) => {
-		const costumerModel = container.get('customersModel');
-		const carsModel = container.get('carsModel');
+	public addRentDefinitions = (container: any) => {
+		container.get('carsModel');
+		container.get('customersModel');
 		container
 			.add('rentsModel', () => RentModel)
 			.add(
@@ -92,9 +92,9 @@ export default class ConfigureDI {
 
 	public init = async (): Promise<DIContainer> => {
 		await this.initializeSequelize();
-		this.addCarsDefinitions(this.container);
+		this.addCarDefinitions(this.container);
 		this.addCustomerDefinitions(this.container);
-		this.addRentsDefinitions(this.container);
+		this.addRentDefinitions(this.container);
 		return this.container;
 	};
 }

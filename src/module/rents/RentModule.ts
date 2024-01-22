@@ -1,7 +1,7 @@
-import RentModel from './model/RentsModel';
-import RentController from './controller/RentsController';
-import RentService from './service/RentsService';
-import RentRepository from './repository/RentsRepository';
+import RentModel from './model/RentModel';
+import RentController from './controller/RentController';
+import RentService from './service/RentService';
+import RentRepository from './repository/RentRepository';
 import { Application } from 'express';
 class RentModule {
 	constructor() {}

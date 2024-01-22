@@ -1,5 +1,6 @@
 import { RentRepository } from '../RentModule';
 import IRent from '../entity/IRent';
+
 export default class RentService {
 	private rentsRepository: RentRepository;
 	constructor(rentsRepository: RentRepository) {

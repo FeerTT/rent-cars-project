@@ -1,6 +1,6 @@
 import request from 'supertest';
 import express from 'express';
-import { CarsController, CarService } from '../../CarsModule';
+import { CarsController, CarService } from '../../CarModule';
 import { carsData, carData, createdCarData } from './fixtures/TestCreateCars';
 import {
 	mockCarData,

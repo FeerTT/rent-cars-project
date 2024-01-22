@@ -1,4 +1,4 @@
-import { CarsRepository, CarService } from '../../CarsModule';
+import { CarsRepository, CarService } from '../../CarModule';
 import { carData, createdCar } from './fixtures/TestsCreateData';
 import { carList } from './fixtures/TestsGetAllData';
 import { carId } from './fixtures/TestsUpdateData';

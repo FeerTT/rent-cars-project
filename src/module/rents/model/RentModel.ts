@@ -6,9 +6,8 @@ import {
 	ForeignKey,
 	BelongsTo,
 	Sequelize,
-	HasMany,
 } from 'sequelize-typescript';
-import { CarsModel } from '../../cars/CarsModule';
+import { CarModel } from '../../cars/CarModule';
 import { CustomerModel } from '../../customers/CustomerModule';
 
 @Table({ modelName: 'Rents' })
@@ -34,8 +33,8 @@ export default class RentModel extends Model {
 	@Column({ type: DataType.BOOLEAN, allowNull: false })
 	isPaid!: boolean;
 
-	@BelongsTo(() => CarsModel, 'carId')
-	car!: CarsModel;
+	@BelongsTo(() => CarModel, 'carId')
+	car!: CarModel;
 
 	@BelongsTo(() => CustomerModel, 'customerId')
 	customer!: CustomerModel;

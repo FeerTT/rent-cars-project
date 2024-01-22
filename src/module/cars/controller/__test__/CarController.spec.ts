@@ -1,4 +1,4 @@
-import { CarService, CarsController } from '../../CarsModule';
+import { CarService, CarsController } from '../../CarModule';
 import { Request, Response } from 'express';
 import { createCarFixture } from './fixtures/TestCreateCars';
 import { viewCarFixture } from './fixtures/TestViewCars';
@@ -24,7 +24,7 @@ describe('CarsController', () => {
 			status: jest.fn().mockReturnThis(),
 			json: jest.fn(),
 		} as unknown as Response;
-		await carsController.index(req, res);
+		await carsController.getAll(req, res);
 		expect(mockCarService.getAll).toHaveBeenCalledTimes(1);
 	});
 

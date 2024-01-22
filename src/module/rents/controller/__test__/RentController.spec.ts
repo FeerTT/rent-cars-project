@@ -21,7 +21,7 @@ describe('RentsController', () => {
 			status: jest.fn().mockReturnThis(),
 			json: jest.fn(),
 		} as unknown as Response;
-		await rentsController.index(req, res);
+		await rentsController.getAll(req, res);
 		expect(mockRentService.getAll).toHaveBeenCalledTimes(1);
 	});
 

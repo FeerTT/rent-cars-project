@@ -1,8 +1,8 @@
-import CarsModel from './model/CarModel';
 import CarsController from './controller/CarController';
 import { Application } from 'express';
 import CarService from './service/CarService';
 import CarsRepository from './repository/CarRepository';
+import CarModel from './model/CarModel';
 
 class CarsModule {
 	constructor() {}
@@ -11,4 +11,4 @@ class CarsModule {
 		await carsController.configureRoutes(app);
 	};
 }
-export { CarsModel, CarsModule, CarsController, CarService, CarsRepository };
+export { CarModel, CarsModule, CarsController, CarService, CarsRepository };

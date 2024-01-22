@@ -1,10 +1,10 @@
-import { CarsModel } from '../CarsModule';
+import { CarModel } from '../CarModule';
 import ICar from '../entity/ICar';
 
 export default class CarsRepository {
-	private carModel: typeof CarsModel;
+	private carModel: typeof CarModel;
 
-	constructor(carModel: typeof CarsModel) {
+	constructor(carModel: typeof CarModel) {
 		this.carModel = carModel;
 	}
 	public async create(car: any): Promise<ICar> {

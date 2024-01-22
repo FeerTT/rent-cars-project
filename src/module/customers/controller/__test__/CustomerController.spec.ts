@@ -25,7 +25,7 @@ describe('CustomerController', () => {
 			status: jest.fn().mockReturnThis(),
 			json: jest.fn(),
 		} as unknown as Response;
-		await customerController.index(req, res);
+		await customerController.getAll(req, res);
 		expect(mockCustomerService.getAll).toHaveBeenCalledTimes(1);
 	});
 
