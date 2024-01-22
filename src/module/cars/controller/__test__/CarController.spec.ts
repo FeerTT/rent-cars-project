@@ -1,4 +1,4 @@
-import { CarService, CarsController } from '../../CarsModule';
+import { CarService, CarController } from '../../CarModule';
 import { Request, Response } from 'express';
 import { createCarFixture } from './fixtures/TestCreateCars';
 import { viewCarFixture } from './fixtures/TestViewCars';
@@ -16,7 +16,7 @@ describe('CarsController', () => {
 		update: jest.fn(),
 		getById: jest.fn(),
 	} as unknown as CarService;
-	const carsController = new CarsController(mockCarService);
+	const carsController = new CarController(mockCarService);
 
 	it('should call carsService.getAll once', async () => {
 		const req = {} as Request;
@@ -24,7 +24,7 @@ describe('CarsController', () => {
 			status: jest.fn().mockReturnThis(),
 			json: jest.fn(),
 		} as unknown as Response;
-		await carsController.index(req, res);
+		await carsController.getAll(req, res);
 		expect(mockCarService.getAll).toHaveBeenCalledTimes(1);
 	});
 
@@ -73,7 +73,7 @@ describe('CarsController', () => {
 
 	it('should call carsService.getById and carsService.delete once on success', async () => {
 		const req: Request = {
-			params: { id: carID.toString() },
+			params: { id: carID },
 		} as unknown as Request;
 		const res = {
 			status: jest.fn().mockReturnThis(),

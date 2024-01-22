@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 import ConfigureDI from './config/di';
-import { CarsModule } from './module/cars/CarsModule';
-
+import { RentModule } from './module/rents/RentModule';
 import { CustomerModule } from './module/customers/CustomerModule';
+import { CarModule } from './module/cars/CarModule';
 
 async function init(): Promise<void> {
 	try {
@@ -17,11 +17,14 @@ async function init(): Promise<void> {
 		const config: ConfigureDI = new ConfigureDI();
 		await config.init();
 
-		const carsModule: CarsModule = new CarsModule();
-		await carsModule.init(app, config.container);
+		const carModule: CarModule = new CarModule();
+		await carModule.init(app, config.container);
 
 		const customerModule: CustomerModule = new CustomerModule();
 		await customerModule.init(app, config.container);
+
+		const rentModule: RentModule = new RentModule();
+		await rentModule.init(app, config.container);
 
 		app.get('/', (req: Request, res: Response) => {
 			res.send('Cars Rent Project');

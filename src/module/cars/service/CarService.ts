@@ -1,10 +1,10 @@
 import ICar from '../entity/ICar';
-import { CarsRepository } from '../CarsModule';
+import { CarRepository } from '../CarModule';
 
-export default class CarsService {
-	public carRepository: CarsRepository;
+export default class CarService {
+	public carRepository: CarRepository;
 
-	constructor(carRepository: CarsRepository) {
+	constructor(carRepository: CarRepository) {
 		this.carRepository = carRepository;
 	}
 	public async create(car: ICar): Promise<ICar> {
