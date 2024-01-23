@@ -5,12 +5,20 @@ import { RentModule } from './module/rents/RentModule';
 import { CustomerModule } from './module/customers/CustomerModule';
 import { CarModule } from './module/cars/CarModule';
 
+const corsOptions = {
+	origin: '*',
+	methods: 'GET,PUT,POST,DELETE',
+	allowedHeaders: 'Content-Type,Authorization',
+};
+
 async function init(): Promise<void> {
 	try {
+		const cors = require('cors');
+
 		dotenv.config();
 		const app: Application = express();
 		const PORT: number | string = process.env.PORT || 3000;
-
+		app.use(cors(corsOptions));
 		app.use('/public', express.static('public'));
 		app.use(express.json({ limit: '100mb' }));
 
@@ -34,7 +42,7 @@ async function init(): Promise<void> {
 			console.log(`Servidor corriendo en el puerto ${PORT}`);
 		});
 	} catch (error) {
-		console.log('ERROR EN APP.TS', error);
+		console.log('Error on APP.TS', error);
 		throw new Error(error);
 	}
 }
