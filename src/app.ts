@@ -4,6 +4,7 @@ import ConfigureDI from './config/di';
 import { RentModule } from './module/rents/RentModule';
 import { CustomerModule } from './module/customers/CustomerModule';
 import { CarModule } from './module/cars/CarModule';
+import cors from 'cors';
 
 const corsOptions = {
 	origin: '*',
@@ -13,8 +14,6 @@ const corsOptions = {
 
 async function init(): Promise<void> {
 	try {
-		const cors = require('cors');
-
 		dotenv.config();
 		const app: Application = express();
 		const PORT: number | string = process.env.PORT || 3000;
@@ -39,7 +38,7 @@ async function init(): Promise<void> {
 		});
 
 		app.listen(PORT, () => {
-			console.log(`Servidor corriendo en el puerto ${PORT}`);
+			console.log(`Server running at port: ${PORT}`);
 		});
 	} catch (error) {
 		console.log('Error on APP.TS', error);
